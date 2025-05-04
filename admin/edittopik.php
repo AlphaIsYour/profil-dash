@@ -1,3 +1,29 @@
+<?php
+session_start();
+include('../koneksi/koneksi.php');
+if(isset($_GET['data'])){
+    $id_master_topik = mysqli_real_escape_string($koneksi, $_GET['data']);
+    $_SESSION['id_master_topik'] = $id_master_topik;
+    
+    // Get topik data using prepared statement
+    $sql_d = "SELECT `topik` FROM `master_topik` WHERE `id_master_topik` = ?";
+    $stmt = mysqli_prepare($koneksi, $sql_d);
+    mysqli_stmt_bind_param($stmt, 's', $id_master_topik);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if(mysqli_num_rows($result) > 0) {
+        $data_d = mysqli_fetch_assoc($result);
+        $topik = $data_d['topik'];
+    } else {
+        // Redirect if topik doesn't exist
+        header("Location: topik.php");
+        exit;
+    }
+    mysqli_stmt_close($stmt);
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,15 +67,23 @@
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <div class="col-sm-10">
-          <div class="alert alert-danger" role="alert">Maaf data Topik wajib di isi</div>
-      </div>
-      <form class="form-horizontal">
+      <?php if(!empty($_GET['notif'])){?>
+        <?php if($_GET['notif']=="editkosong"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf data topik wajib di isi
+          </div>
+        <?php } else if($_GET['notif']=="editgagal"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf nama topik sudah ada
+          </div>
+        <?php }?>
+      <?php }?>
+      <form class="form-horizontal" method="post" action="konfirmasiedittopik.php">
         <div class="card-body">
           <div class="form-group row">
             <label for="Topik" class="col-sm-3 col-form-label">Topik</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" id="Topik" name="topik" value="Saran">
+              <input type="text" class="form-control" id="Topik" name="topik" value="<?php echo htmlspecialchars($topik);?>">
             </div>
           </div>
         </div>
