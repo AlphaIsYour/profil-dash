@@ -1,13 +1,17 @@
+<?php
+// Jika perlu, tambahkan include koneksi atau session start di sini
+// include('../koneksi/koneksi.php');
+?>
 <!DOCTYPE html>
 <html>
 <head>
-<?php include("includes/head.php") ?> 
+<?php include("includes/head.php") ?>
+<title>Tambah Hard Skill</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 <?php include("includes/header.php") ?>
-
-  <?php include("includes/sidebar.php") ?>
+<?php include("includes/sidebar.php") ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -41,24 +45,25 @@
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <?php if(!empty($_GET['notif'])){?>
-        <?php if($_GET['notif']=="tambahkosong"){?>
-          <div class="alert alert-danger" role="alert">
-            Maaf data hardskill wajib di isi
-          </div>
-        <?php } else if($_GET['notif']=="tambahgagal"){?>
-          <div class="alert alert-danger" role="alert">
-            Maaf nama hardskill sudah ada
-          </div>
-        <?php }?>
-      <?php }?>
-      
+      <div class="col-sm-10 offset-sm-1"> <!-- Atur posisi notifikasi -->
+          <?php if (!empty($_GET['notif'])) { ?>
+              <?php if ($_GET['notif'] == "tambahkosong") { ?>
+                  <div class="alert alert-danger" role="alert"> Maaf, data hard skill wajib diisi.</div>
+              <?php } else if ($_GET['notif'] == "tambahgagal") { ?>
+                  <div class="alert alert-danger" role="alert"> Maaf, gagal menambahkan data. Terjadi kesalahan server.</div>
+              <?php } else if ($_GET['notif'] == "duplikat") { ?>
+                  <div class="alert alert-warning" role="alert"> Maaf, nama hard skill tersebut sudah ada.</div>
+              <?php } ?>
+          <?php } ?>
+      </div>
+
       <form class="form-horizontal" method="post" action="konfirmasitambahhardskill.php">
         <div class="card-body">
           <div class="form-group row">
             <label for="hardskill" class="col-sm-3 col-form-label">Hard Skill</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" id="hardskill" name="hardskill" value="">
+              <!-- Pastikan name="hardskill" dan tambahkan required -->
+              <input type="text" class="form-control" id="hardskill" name="hardskill" value="" required>
             </div>
           </div>
         </div>
@@ -66,7 +71,7 @@
         <div class="card-footer">
           <div class="col-sm-10">
             <button type="submit" class="btn btn-info float-right"><i class="fas fa-plus"></i> Tambah</button>
-          </div>  
+          </div>
         </div>
         <!-- /.card-footer -->
       </form>
