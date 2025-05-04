@@ -1,0 +1,23 @@
+.nav-link {
+    color: blue !important;
+}
+
+nav.navbar ul.navbar-nav li a:hover {
+    text-decoration: underline;
+}
+#profil {
+    background: #5271ff;
+    min-height: 300px;
+}
+#pendidikan aside {
+    background-color: #bbb;
+    min-height: 400px;
+    border-radius: 8px;
+}
+footer {
+    height: 80px;
+    font-size: 14px;
+    background: #222;
+    border-top: 5px solid #5271ff;
+}
+
