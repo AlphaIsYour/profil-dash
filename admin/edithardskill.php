@@ -1,3 +1,29 @@
+<?php
+session_start();
+include('../koneksi/koneksi.php');
+if(isset($_GET['data'])){
+    $id_master_hard_skill = mysqli_real_escape_string($koneksi, $_GET['data']);
+    $_SESSION['id_master_hard_skill'] = $id_master_hard_skill;
+    
+    // Get hardskill data using prepared statement
+    $sql_d = "SELECT `hard_skill` FROM `master_hard_skill` WHERE `id_master_hard_skill` = ?";
+    $stmt = mysqli_prepare($koneksi, $sql_d);
+    mysqli_stmt_bind_param($stmt, 's', $id_master_hard_skill);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if(mysqli_num_rows($result) > 0) {
+        $data_d = mysqli_fetch_assoc($result);
+        $hard_skill = $data_d['hard_skill'];
+    } else {
+        // Redirect if hardskill doesn't exist
+        header("Location: hardskill.php");
+        exit;
+    }
+    mysqli_stmt_close($stmt);
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,15 +67,23 @@
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <div class="col-sm-10">
-          <div class="alert alert-danger" role="alert">Maaf data Hard Skill wajib di isi</div>
-      </div>
-      <form class="form-horizontal">
+      <?php if(!empty($_GET['notif'])){?>
+        <?php if($_GET['notif']=="editkosong"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf data hardskill wajib di isi
+          </div>
+        <?php } else if($_GET['notif']=="editgagal"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf nama hardskill sudah ada
+          </div>
+        <?php }?>
+      <?php }?>
+      <form class="form-horizontal" method="post" action="konfirmasiedithardskill.php">
         <div class="card-body">
           <div class="form-group row">
             <label for="hardskill" class="col-sm-3 col-form-label">Hard Skill</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" id="hardskill" name="hardskill" value="PHP, Python">
+            <input type="text" class="form-control" id="hardksill" name="hardskill" value="<?php echo htmlspecialchars($hard_skill);?>">
             </div>
           </div>
         </div>
