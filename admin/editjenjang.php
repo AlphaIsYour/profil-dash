@@ -5,7 +5,7 @@ if(isset($_GET['data'])){
     $id_master_jenjang = mysqli_real_escape_string($koneksi, $_GET['data']);
     $_SESSION['id_master_jenjang'] = $id_master_jenjang;
     
-    // Get university data using prepared statement
+    // Get jenjang data using prepared statement
     $sql_d = "SELECT `jenjang` FROM `master_jenjang` WHERE `id_master_jenjang` = ?";
     $stmt = mysqli_prepare($koneksi, $sql_d);
     mysqli_stmt_bind_param($stmt, 's', $id_master_jenjang);
@@ -16,7 +16,7 @@ if(isset($_GET['data'])){
         $data_d = mysqli_fetch_assoc($result);
         $jenjang = $data_d['jenjang'];
     } else {
-        // Redirect if university doesn't exist
+        // Redirect if jenjang doesn't exist
         header("Location: jenjang.php");
         exit;
     }
@@ -78,7 +78,7 @@ if(isset($_GET['data'])){
           </div>
         <?php }?>
       <?php }?>
-      <form class="form-horizontal" method="post" action="konfirmasiedituniversitas.php">
+      <form class="form-horizontal" method="post" action="konfirmasieditjenjang.php">
         <div class="card-body">
           <div class="form-group row">
             <label for="jenjang" class="col-sm-3 col-form-label">Jenjang</label>

@@ -1,3 +1,31 @@
+<?php
+include('../koneksi/koneksi.php');
+
+if((isset($_GET['aksi']))&&(isset($_GET['data']))){
+    if($_GET['aksi']=='hapus'){
+        $id_master_soft_skill = mysqli_real_escape_string($koneksi, $_GET['data']);
+        //hapus softskill
+        $sql_dh = "DELETE FROM `soft_skill` WHERE `id_master_soft_skill` = ?";
+        $stmt = mysqli_prepare($koneksi, $sql_dh);
+        mysqli_stmt_bind_param($stmt, 's', $id_master_soft_skill);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        
+        header("Location: softskill.php?notif=hapusberhasil");
+        exit;
+    }
+}
+
+$search_query = "";
+if(isset($_GET['katakunci']) && !empty($_GET['katakunci'])) {
+    $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
+}
+
+$limit = 10;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$start = ($page - 1) * $limit;
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

@@ -3,11 +3,11 @@ include('../koneksi/koneksi.php');
 
 if((isset($_GET['aksi']))&&(isset($_GET['data']))){
     if($_GET['aksi']=='hapus'){
-        $id_master_universitas = mysqli_real_escape_string($koneksi, $_GET['data']);
-        //hapus universitas
+        $id_master_jenjang = mysqli_real_escape_string($koneksi, $_GET['data']);
+        //hapus jenjang
         $sql_dh = "DELETE FROM `master_jenjang` WHERE `id_master_jenjang` = ?";
         $stmt = mysqli_prepare($koneksi, $sql_dh);
-        mysqli_stmt_bind_param($stmt, 's', $id_master_universitas);
+        mysqli_stmt_bind_param($stmt, 's', $id_master_jenjang);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         
@@ -120,7 +120,7 @@ $start = ($page - 1) * $limit;
                         $total_records = $row['total'];
                         $total_pages = ceil($total_records / $limit);
                         
-                        // Main query for fetching universities
+                        // Main query for fetching jenjang
                         $sql_u = "SELECT `id_master_jenjang`, `jenjang` FROM `master_jenjang`";
                         if(!empty($search_query)) {
                             $sql_u .= " WHERE `jenjang` LIKE ?";
@@ -161,7 +161,7 @@ $start = ($page - 1) * $limit;
                         } else {
                         ?>
                         <tr>
-                            <td colspan="3" class="text-center">Tidak ada data universitas</td>
+                            <td colspan="3" class="text-center">Tidak ada data jenjang</td>
                         </tr>
                         <?php } ?>
                   </tbody>
@@ -171,8 +171,8 @@ $start = ($page - 1) * $limit;
               <div class="card-footer clearfix">
                 <ul class="pagination pagination-sm m-0 float-right">
                   <?php if($page > 1): ?>
-                    <li class="page-item"><a class="page-link" href="universitas.php?page=1<?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&laquo;</a></li>
-                    <li class="page-item"><a class="page-link" href="universitas.php?page=<?php echo $page-1; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&lsaquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="jenjang.php?page=1<?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&laquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="jenjang.php?page=<?php echo $page-1; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&lsaquo;</a></li>
                   <?php endif; ?>
                   
                   <?php 
@@ -182,13 +182,13 @@ $start = ($page - 1) * $limit;
                   for($i = $start_page; $i <= $end_page; $i++): 
                   ?>
                     <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                      <a class="page-link" href="universitas.php?page=<?php echo $i; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>"><?php echo $i; ?></a>
+                      <a class="page-link" href="jenjang.php?page=<?php echo $i; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>"><?php echo $i; ?></a>
                     </li>
                   <?php endfor; ?>
                   
                   <?php if($page < $total_pages): ?>
-                    <li class="page-item"><a class="page-link" href="universitas.php?page=<?php echo $page+1; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&rsaquo;</a></li>
-                    <li class="page-item"><a class="page-link" href="universitas.php?page=<?php echo $total_pages; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&raquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="jenjang.php?page=<?php echo $page+1; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&rsaquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="jenjang.php?page=<?php echo $total_pages; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&raquo;</a></li>
                   <?php endif; ?>
                 </ul>
               </div>
