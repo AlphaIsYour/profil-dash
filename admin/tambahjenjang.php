@@ -41,10 +41,19 @@
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <div class="col-sm-10">
-          <div class="alert alert-danger" role="alert">Maaf data jenjang wajib di isi</div>
-      </div>
-      <form class="form-horizontal">
+      <?php if(!empty($_GET['notif'])){?>
+        <?php if($_GET['notif']=="tambahkosong"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf data Jenjang wajib di isi
+          </div>
+        <?php } else if($_GET['notif']=="tambahgagal"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf nama Jenajang sudah ada
+          </div>
+        <?php }?>
+      <?php }?>
+
+      <form class="form-horizontal" method="post" action="konfirmasitambahjenjang.php">
         <div class="card-body">
           <div class="form-group row">
             <label for="jenjang" class="col-sm-3 col-form-label">Jenjang Pendidikan</label>
