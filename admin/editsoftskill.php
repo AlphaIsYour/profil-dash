@@ -1,3 +1,29 @@
+<?php
+session_start();
+include('../koneksi/koneksi.php');
+if(isset($_GET['data'])){
+    $id_master_soft_skill = mysqli_real_escape_string($koneksi, $_GET['data']);
+    $_SESSION['id_master_soft_skill'] = $id_master_soft_skill;
+    
+    // Get softskill data using prepared statement
+    $sql_d = "SELECT `soft_skill` FROM `master_soft_skill` WHERE `id_master_soft_skill` = ?";
+    $stmt = mysqli_prepare($koneksi, $sql_d);
+    mysqli_stmt_bind_param($stmt, 's', $id_master_soft_skill);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if(mysqli_num_rows($result) > 0) {
+        $data_d = mysqli_fetch_assoc($result);
+        $soft_skill = $data_d['soft_skill'];
+    } else {
+        // Redirect if softskill doesn't exist
+        header("Location: softskill.php");
+        exit;
+    }
+    mysqli_stmt_close($stmt);
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,15 +67,23 @@
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <div class="col-sm-10">
-          <div class="alert alert-danger" role="alert">Maaf data Soft Skill wajib di isi</div>
-      </div>
-      <form class="form-horizontal">
+      <?php if(!empty($_GET['notif'])){?>
+        <?php if($_GET['notif']=="editkosong"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf data softskill wajib di isi
+          </div>
+        <?php } else if($_GET['notif']=="editgagal"){?>
+          <div class="alert alert-danger" role="alert">
+            Maaf nama softskill sudah ada
+          </div>
+        <?php }?>
+      <?php }?>
+      <form class="form-horizontal" method="post" action="konfirmasieditsoftskill.php">
         <div class="card-body">
           <div class="form-group row">
-            <label for="Soft Skill" class="col-sm-3 col-form-label">Soft Skill</label>
+            <label for="softskill" class="col-sm-3 col-form-label">Soft Skills</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" id="Soft Skill" name="softskill" value="Komunikasi">
+              <input type="text" class="form-control" id="softskill" name="softskill" value="<?php echo htmlspecialchars($soft_skill);?>">
             </div>
           </div>
         </div>
@@ -57,7 +91,7 @@
         <div class="card-footer">
           <div class="col-sm-10">
             <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
-          </div>  
+          </div>
         </div>
         <!-- /.card-footer -->
       </form>
