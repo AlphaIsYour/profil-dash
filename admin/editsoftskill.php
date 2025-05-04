@@ -1,39 +1,49 @@
 <?php
-session_start();
-include('../koneksi/koneksi.php');
-if(isset($_GET['data'])){
+include('../koneksi/koneksi.php'); // Sesuaikan path jika perlu
+
+// Cek apakah ada data ID yang dikirim
+if (isset($_GET['data'])) {
     $id_master_soft_skill = mysqli_real_escape_string($koneksi, $_GET['data']);
-    $_SESSION['id_master_soft_skill'] = $id_master_soft_skill;
-    
-    // Get softskill data using prepared statement
-    $sql_d = "SELECT `soft_skill` FROM `master_soft_skill` WHERE `id_master_soft_skill` = ?";
-    $stmt = mysqli_prepare($koneksi, $sql_d);
-    mysqli_stmt_bind_param($stmt, 's', $id_master_soft_skill);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    
-    if(mysqli_num_rows($result) > 0) {
-        $data_d = mysqli_fetch_assoc($result);
-        $soft_skill = $data_d['soft_skill'];
+
+    // Query untuk mengambil data soft skill berdasarkan ID
+    $sql_get = "SELECT `soft_skill` FROM `master_soft_skill` WHERE `id_master_soft_skill` = ?";
+    $stmt_get = mysqli_prepare($koneksi, $sql_get);
+
+    if ($stmt_get) {
+        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_soft_skill); // Asumsi ID integer
+        mysqli_stmt_execute($stmt_get);
+        $result_get = mysqli_stmt_get_result($stmt_get);
+
+        if ($data_get = mysqli_fetch_assoc($result_get)) {
+            $softskill_lama = $data_get['soft_skill'];
+        } else {
+            // Data tidak ditemukan, redirect atau tampilkan pesan
+            echo "Error: Data soft skill tidak ditemukan.";
+            exit;
+            // atau header("Location: softskill.php?notif=datanotfound"); exit;
+        }
+        mysqli_stmt_close($stmt_get);
     } else {
-        // Redirect if softskill doesn't exist
-        header("Location: softskill.php");
+        echo "Error: Gagal menyiapkan query.";
         exit;
     }
-    mysqli_stmt_close($stmt);
-}
-?>
 
+} else {
+    // Jika tidak ada ID, redirect ke halaman utama
+    header("Location: softskill.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
-<?php include("includes/head.php") ?> 
+<?php include("includes/head.php") ?>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 <?php include("includes/header.php") ?>
-
-  <?php include("includes/sidebar.php") ?>
+<?php include("includes/sidebar.php") ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -67,30 +77,38 @@ if(isset($_GET['data'])){
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <?php if(!empty($_GET['notif'])){?>
-        <?php if($_GET['notif']=="editkosong"){?>
+      <?php if (!empty($_GET['notif'])) { ?>
+        <?php if ($_GET['notif'] == "editkosong") { ?>
           <div class="alert alert-danger" role="alert">
-            Maaf data softskill wajib di isi
+            Maaf data soft skill wajib diisi.
           </div>
-        <?php } else if($_GET['notif']=="editgagal"){?>
+        <?php } else if ($_GET['notif'] == "editgagal") { ?>
           <div class="alert alert-danger" role="alert">
-            Maaf nama softskill sudah ada
+            Maaf, gagal mengubah data. Mungkin nama soft skill sudah ada atau terjadi kesalahan server.
           </div>
-        <?php }?>
-      <?php }?>
+         <?php } else if ($_GET['notif'] == "duplikat") { ?>
+          <div class="alert alert-danger" role="alert">
+            Maaf, nama soft skill tersebut sudah digunakan oleh data lain.
+          </div>
+        <?php } ?>
+      <?php } ?>
+
       <form class="form-horizontal" method="post" action="konfirmasieditsoftskill.php">
+        <!-- Hidden input untuk menyimpan ID yang diedit -->
+        <input type="hidden" name="id_master_soft_skill" value="<?php echo htmlspecialchars($id_master_soft_skill); ?>">
+
         <div class="card-body">
           <div class="form-group row">
-            <label for="softskill" class="col-sm-3 col-form-label">Soft Skills</label>
+            <label for="softskill" class="col-sm-3 col-form-label">Soft Skill</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" id="softskill" name="softskill" value="<?php echo htmlspecialchars($soft_skill);?>">
+              <input type="text" class="form-control" id="softskill" name="softskill" value="<?php echo htmlspecialchars($softskill_lama); ?>" required>
             </div>
           </div>
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
           <div class="col-sm-10">
-            <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
+            <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan Perubahan</button>
           </div>
         </div>
         <!-- /.card-footer -->

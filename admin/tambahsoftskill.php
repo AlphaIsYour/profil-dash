@@ -44,13 +44,17 @@
       <?php if(!empty($_GET['notif'])){?>
         <?php if($_GET['notif']=="tambahkosong"){?>
           <div class="alert alert-danger" role="alert">
-            Maaf data softskill wajib di isi
+            Maaf data soft skill wajib diisi.
           </div>
         <?php } else if($_GET['notif']=="tambahgagal"){?>
           <div class="alert alert-danger" role="alert">
-            Maaf nama softskill sudah ada
+            Maaf, gagal menambahkan data. Mungkin nama soft skill sudah ada atau terjadi kesalahan server.
           </div>
-        <?php }?>
+        <?php } else if ($_GET['notif'] == "duplikat") { ?> <!-- Tambah notifikasi duplikat -->
+          <div class="alert alert-danger" role="alert">
+            Maaf, nama soft skill tersebut sudah ada.
+          </div>
+        <?php } ?>
       <?php }?>
 
 
