@@ -67,10 +67,10 @@ $start = ($page - 1) * $limit;
               <!-- /.card-header -->
               <div class="card-body">
               <div class="col-md-12">
-                  <form method="" action="">
+              <form method="GET" action="softskill.php">
                     <div class="row">
                         <div class="col-md-4 bottom-10">
-                          <input type="text" class="form-control" id="kata_kunci" name="katakunci">
+                          <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari softskill..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 bottom-10">
                           <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>&nbsp; Search</button>

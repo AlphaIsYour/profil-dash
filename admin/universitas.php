@@ -93,7 +93,6 @@ $start = ($page - 1) * $limit;
                 <?php }?>
                 </div>
                 
-                <div class="col-sm-12">
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -168,7 +167,7 @@ $start = ($page - 1) * $limit;
                         <?php } ?>
                       </tbody>
                 </table>
-                </div>
+              </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
                 <ul class="pagination pagination-sm m-0 float-right">
