@@ -1,39 +1,51 @@
 <?php
-session_start();
-include('../koneksi/koneksi.php');
-if(isset($_GET['data'])){
-    $id_master_universitas = mysqli_real_escape_string($koneksi, $_GET['data']);
-    $_SESSION['id_master_universitas'] = $id_master_universitas;
-    
-    // Get university data using prepared statement
-    $sql_d = "SELECT `nama_universitas` FROM `master_universitas` WHERE `id_master_universitas` = ?";
-    $stmt = mysqli_prepare($koneksi, $sql_d);
-    mysqli_stmt_bind_param($stmt, 's', $id_master_universitas);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    
-    if(mysqli_num_rows($result) > 0) {
-        $data_d = mysqli_fetch_assoc($result);
-        $nama_universitas = $data_d['nama_universitas'];
+// Tidak perlu session_start()
+include('../koneksi/koneksi.php'); // Sesuaikan path
+
+$id_master_universitas = null;
+$nama_universitas_lama = ''; // Default
+
+// Validasi dan ambil ID dari URL
+if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
+    $id_master_universitas = (int)$_GET['data'];
+
+    // Query ambil data univ lama
+    $sql_get = "SELECT `nama_universitas` FROM `master_universitas` WHERE `id_master_universitas` = ?";
+    $stmt_get = mysqli_prepare($koneksi, $sql_get);
+
+    if ($stmt_get) {
+        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_universitas); // 'i' untuk integer ID
+        mysqli_stmt_execute($stmt_get);
+        $result_get = mysqli_stmt_get_result($stmt_get);
+
+        if ($data_get = mysqli_fetch_assoc($result_get)) {
+            $nama_universitas_lama = $data_get['nama_universitas'];
+        } else {
+             header("Location: universitas.php?notif=datanotfound"); // Data tidak ada
+             exit;
+        }
+        mysqli_stmt_close($stmt_get);
     } else {
-        // Redirect if university doesn't exist
-        header("Location: universitas.php");
-        exit;
+        echo "Error: Gagal menyiapkan query pengambilan data universitas.";
+        exit; // Atau redirect dengan notif error
     }
-    mysqli_stmt_close($stmt);
+
+} else {
+    header("Location: universitas.php"); // Redirect jika ID tidak ada/valid
+    exit;
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<?php include("includes/head.php") ?> 
+<?php include("includes/head.php") ?>
+<title>Edit Universitas</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 <?php include("includes/header.php") ?>
-
-  <?php include("includes/sidebar.php") ?>
+<?php include("includes/sidebar.php") ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -56,58 +68,63 @@ if(isset($_GET['data'])){
 
     <!-- Main content -->
     <section class="content">
-
-    <div class="card card-info">
-      <div class="card-header">
-        <h3 class="card-title" style="margin-top:5px;"><i class="far fa-list-alt"></i> Form Edit Universitas</h3>
-        <div class="card-tools">
-          <a href="universitas.php" class="btn btn-sm btn-warning float-right"><i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
-        </div>
-      </div>
-      <!-- /.card-header -->
-      <!-- form start -->
-      </br>
-      <?php if(!empty($_GET['notif'])){?>
-        <?php if($_GET['notif']=="editkosong"){?>
-          <div class="alert alert-danger" role="alert">
-            Maaf data universitas wajib di isi
-          </div>
-        <?php } else if($_GET['notif']=="editgagal"){?>
-          <div class="alert alert-danger" role="alert">
-            Maaf nama universitas sudah ada
-          </div>
-        <?php }?>
-      <?php }?>
-      
-      <form class="form-horizontal" method="post" action="konfirmasiedituniversitas.php">
-        <div class="card-body">
-          <div class="form-group row">
-            <label for="universitas" class="col-sm-3 col-form-label">Universitas</label>
-            <div class="col-sm-7">
-              <input type="text" class="form-control" id="universitas" name="universitas" value="<?php echo htmlspecialchars($nama_universitas);?>">
+        <div class="card card-info">
+            <div class="card-header">
+                <h3 class="card-title" style="margin-top:5px;"><i class="far fa-list-alt"></i> Form Edit Universitas</h3>
+                <div class="card-tools">
+                <a href="universitas.php" class="btn btn-sm btn-warning float-right"><i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
+                </div>
             </div>
-          </div>
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer">
-          <div class="col-sm-10">
-            <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
-          </div>
-        </div>
-        <!-- /.card-footer -->
-      </form>
-    </div>
-    <!-- /.card -->
+            <!-- /.card-header -->
+            <!-- form start -->
+            </br>
+             <div class="col-sm-10 offset-sm-1"> <!-- Posisi notifikasi -->
+                <?php if(!empty($_GET['notif'])){?>
+                    <?php if($_GET['notif']=="editkosong"){?>
+                    <div class="alert alert-danger" role="alert">
+                        Maaf, nama universitas wajib diisi.
+                    </div>
+                    <?php } else if($_GET['notif']=="duplikat"){ // Ganti notif gagal jadi duplikat ?>
+                    <div class="alert alert-warning" role="alert">
+                        Maaf, nama universitas tersebut sudah ada.
+                    </div>
+                     <?php } else if($_GET['notif']=="editgagal"){ // Notif gagal umum ?>
+                    <div class="alert alert-danger" role="alert">
+                       Maaf, terjadi kesalahan saat mengubah data.
+                    </div>
+                    <?php }?>
+                <?php }?>
+             </div>
 
+            <form class="form-horizontal" method="post" action="konfirmasiedituniversitas.php">
+                 <!-- Hidden input untuk ID -->
+                <input type="hidden" name="id_master_universitas" value="<?php echo htmlspecialchars($id_master_universitas); ?>">
+
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label for="universitas" class="col-sm-3 col-form-label">Universitas <span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
+                        <input type="text" class="form-control" id="universitas" name="universitas" value="<?php echo htmlspecialchars($nama_universitas_lama);?>" required>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
+                    </div>
+                </div>
+                <!-- /.card-footer -->
+            </form>
+        </div>
+        <!-- /.card -->
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
   <?php include("includes/footer.php") ?>
-
 </div>
 <!-- ./wrapper -->
-
 <?php include("includes/script.php") ?>
 </body>
 </html>
