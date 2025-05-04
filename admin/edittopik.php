@@ -1,39 +1,51 @@
 <?php
-session_start();
-include('../koneksi/koneksi.php');
-if(isset($_GET['data'])){
-    $id_master_topik = mysqli_real_escape_string($koneksi, $_GET['data']);
-    $_SESSION['id_master_topik'] = $id_master_topik;
-    
-    // Get topik data using prepared statement
-    $sql_d = "SELECT `topik` FROM `master_topik` WHERE `id_master_topik` = ?";
-    $stmt = mysqli_prepare($koneksi, $sql_d);
-    mysqli_stmt_bind_param($stmt, 's', $id_master_topik);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    
-    if(mysqli_num_rows($result) > 0) {
-        $data_d = mysqli_fetch_assoc($result);
-        $topik = $data_d['topik'];
+// Tidak perlu session_start()
+include('../koneksi/koneksi.php'); // Sesuaikan path
+
+$id_master_topik = null;
+$topik_lama = ''; // Default value
+
+// Cek apakah ada data ID yang dikirim dan valid
+if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
+    $id_master_topik = (int)$_GET['data'];
+
+    // Query ambil data topik lama
+    $sql_get = "SELECT `topik` FROM `master_topik` WHERE `id_master_topik` = ?";
+    $stmt_get = mysqli_prepare($koneksi, $sql_get);
+
+    if ($stmt_get) {
+        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_topik);
+        mysqli_stmt_execute($stmt_get);
+        $result_get = mysqli_stmt_get_result($stmt_get);
+
+        if ($data_get = mysqli_fetch_assoc($result_get)) {
+            $topik_lama = $data_get['topik'];
+        } else {
+             header("Location: topik.php?notif=datanotfound");
+             exit;
+        }
+        mysqli_stmt_close($stmt_get);
     } else {
-        // Redirect if topik doesn't exist
-        header("Location: topik.php");
+        echo "Error: Gagal menyiapkan query pengambilan data topik.";
         exit;
     }
-    mysqli_stmt_close($stmt);
-}
-?>
 
+} else {
+    header("Location: topik.php"); // Redirect jika ID tidak ada/valid
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
-<?php include("includes/head.php") ?> 
+<?php include("includes/head.php") ?>
+<title>Edit Topik</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 <?php include("includes/header.php") ?>
-
-  <?php include("includes/sidebar.php") ?>
+<?php include("includes/sidebar.php") ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -67,31 +79,36 @@ if(isset($_GET['data'])){
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <?php if(!empty($_GET['notif'])){?>
-        <?php if($_GET['notif']=="editkosong"){?>
-          <div class="alert alert-danger" role="alert">
-            Maaf data topik wajib di isi
-          </div>
-        <?php } else if($_GET['notif']=="editgagal"){?>
-          <div class="alert alert-danger" role="alert">
-            Maaf nama topik sudah ada
-          </div>
-        <?php }?>
-      <?php }?>
+       <div class="col-sm-10 offset-sm-1"> <!-- Atur posisi notifikasi -->
+          <?php if (!empty($_GET['notif'])) { ?>
+            <?php if ($_GET['notif'] == "editkosong") { ?>
+              <div class="alert alert-danger" role="alert"> Maaf, data topik wajib diisi.</div>
+            <?php } else if ($_GET['notif'] == "editgagal") { ?>
+              <div class="alert alert-danger" role="alert"> Maaf, gagal mengubah data. Terjadi kesalahan server.</div>
+            <?php } else if ($_GET['notif'] == "duplikat") { ?>
+              <div class="alert alert-warning" role="alert"> Maaf, nama topik tersebut sudah digunakan oleh data lain.</div>
+            <?php } ?>
+          <?php } ?>
+       </div>
+
       <form class="form-horizontal" method="post" action="konfirmasiedittopik.php">
+        <!-- Hidden input untuk ID -->
+        <input type="hidden" name="id_master_topik" value="<?php echo htmlspecialchars($id_master_topik); ?>">
+
         <div class="card-body">
           <div class="form-group row">
-            <label for="Topik" class="col-sm-3 col-form-label">Topik</label>
+            <label for="topik" class="col-sm-3 col-form-label">Topik</label> <!-- Ganti for dan id jadi lowercase -->
             <div class="col-sm-7">
-              <input type="text" class="form-control" id="Topik" name="topik" value="<?php echo htmlspecialchars($topik);?>">
+               <!-- Ganti id jadi lowercase dan tambahkan required -->
+              <input type="text" class="form-control" id="topik" name="topik" value="<?php echo htmlspecialchars($topik_lama); ?>" required>
             </div>
           </div>
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
           <div class="col-sm-10">
-            <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
-          </div>  
+            <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan Perubahan</button>
+          </div>
         </div>
         <!-- /.card-footer -->
       </form>
