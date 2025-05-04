@@ -1,7 +1,6 @@
 <?php
 include('../koneksi/koneksi.php');
 
-// Handle delete action
 if((isset($_GET['aksi']))&&(isset($_GET['data']))){
     if($_GET['aksi']=='hapus'){
         $id_master_universitas = mysqli_real_escape_string($koneksi, $_GET['data']);
@@ -12,20 +11,17 @@ if((isset($_GET['aksi']))&&(isset($_GET['data']))){
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         
-        // Redirect with notification
         header("Location: universitas.php?notif=hapusberhasil");
         exit;
     }
 }
 
-// Handle search functionality
 $search_query = "";
 if(isset($_GET['katakunci']) && !empty($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
 }
 
-// Pagination setup
-$limit = 10; // Number of records per page
+$limit = 10;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $start = ($page - 1) * $limit;
 ?>
@@ -106,71 +102,71 @@ $start = ($page - 1) * $limit;
                     <th width="15%"><center>Aksi</center></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <?php
-                    // Count total records for pagination
-                    $count_query = "SELECT COUNT(*) as total FROM `master_universitas`";
-                    if(!empty($search_query)) {
-                        $count_query .= " WHERE `nama_universitas` LIKE ?";
-                    }
-                    $stmt = mysqli_prepare($koneksi, $count_query);
-                    
-                    if(!empty($search_query)) {
-                        $search_param = "%$search_query%";
-                        mysqli_stmt_bind_param($stmt, 's', $search_param);
-                    }
-                    
-                    mysqli_stmt_execute($stmt);
-                    $result = mysqli_stmt_get_result($stmt);
-                    $row = mysqli_fetch_assoc($result);
-                    $total_records = $row['total'];
-                    $total_pages = ceil($total_records / $limit);
-                    
-                    // Main query for fetching universities
-                    $sql_u = "SELECT `id_master_universitas`, `nama_universitas` FROM `master_universitas`";
-                    if(!empty($search_query)) {
-                        $sql_u .= " WHERE `nama_universitas` LIKE ?";
-                    }
-                    $sql_u .= " ORDER BY `nama_universitas` LIMIT ?, ?";
-                    
-                    $stmt = mysqli_prepare($koneksi, $sql_u);
-                    
-                    if(!empty($search_query)) {
-                        $search_param = "%$search_query%";
-                        mysqli_stmt_bind_param($stmt, 'sii', $search_param, $start, $limit);
-                    } else {
-                        mysqli_stmt_bind_param($stmt, 'ii', $start, $limit);
-                    }
-                    
-                    mysqli_stmt_execute($stmt);
-                    $result = mysqli_stmt_get_result($stmt);
-                    
-                    $no = $start + 1;
-                    if(mysqli_num_rows($result) > 0) {
-                        while($data_u = mysqli_fetch_assoc($result)){
-                            $id_master_universitas = $data_u['id_master_universitas'];
-                            $nama_universitas = $data_u['nama_universitas'];
-                    ?>
-                    <tr>
-                    <td><?php echo $no;?></td>
-                    <td><?php echo htmlspecialchars($nama_universitas);?></td>
-                    <td align="center">
-                    <a href="edituniversitas.php?data=<?php echo htmlspecialchars($id_master_universitas);?>"
-                    class="btn btn-xs btn-info"><i class="fas fa-edit"></i> Edit</a>
-                    <a href="javascript:if(confirm('Anda yakin ingin menghapus data <?php echo htmlspecialchars($nama_universitas); ?>?'))window.location.href = 'universitas.php?aksi=hapus&data=<?php echo htmlspecialchars($id_master_universitas);?>'"
-                    class="btn btn-xs btn-warning"><i class="fas fa-trash"></i> Hapus</a>
-                    </td>
-                    </tr>
-                    <?php 
-                        $no++;
+                      <tbody>
+                        <?php
+                        // Count total records for pagination
+                        $count_query = "SELECT COUNT(*) as total FROM `master_universitas`";
+                        if(!empty($search_query)) {
+                            $count_query .= " WHERE `nama_universitas` LIKE ?";
                         }
-                    } else {
-                    ?>
-                    <tr>
-                        <td colspan="3" class="text-center">Tidak ada data universitas</td>
-                    </tr>
-                    <?php } ?>
-                    </tbody>
+                        $stmt = mysqli_prepare($koneksi, $count_query);
+                        
+                        if(!empty($search_query)) {
+                            $search_param = "%$search_query%";
+                            mysqli_stmt_bind_param($stmt, 's', $search_param);
+                        }
+                        
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        $row = mysqli_fetch_assoc($result);
+                        $total_records = $row['total'];
+                        $total_pages = ceil($total_records / $limit);
+                        
+                        // Main query for fetching universities
+                        $sql_u = "SELECT `id_master_universitas`, `nama_universitas` FROM `master_universitas`";
+                        if(!empty($search_query)) {
+                            $sql_u .= " WHERE `nama_universitas` LIKE ?";
+                        }
+                        $sql_u .= " ORDER BY `nama_universitas` LIMIT ?, ?";
+                        
+                        $stmt = mysqli_prepare($koneksi, $sql_u);
+                        
+                        if(!empty($search_query)) {
+                            $search_param = "%$search_query%";
+                            mysqli_stmt_bind_param($stmt, 'sii', $search_param, $start, $limit);
+                        } else {
+                            mysqli_stmt_bind_param($stmt, 'ii', $start, $limit);
+                        }
+                        
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        
+                        $no = $start + 1;
+                        if(mysqli_num_rows($result) > 0) {
+                            while($data_u = mysqli_fetch_assoc($result)){
+                                $id_master_universitas = $data_u['id_master_universitas'];
+                                $nama_universitas = $data_u['nama_universitas'];
+                        ?>
+                        <tr>
+                        <td><?php echo $no;?></td>
+                        <td><?php echo htmlspecialchars($nama_universitas);?></td>
+                        <td align="center">
+                        <a href="edituniversitas.php?data=<?php echo htmlspecialchars($id_master_universitas);?>"
+                        class="btn btn-xs btn-info"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="javascript:if(confirm('Anda yakin ingin menghapus data <?php echo htmlspecialchars($nama_universitas); ?>?'))window.location.href = 'universitas.php?aksi=hapus&data=<?php echo htmlspecialchars($id_master_universitas);?>'"
+                        class="btn btn-xs btn-warning"><i class="fas fa-trash"></i> Hapus</a>
+                        </td>
+                        </tr>
+                        <?php 
+                            $no++;
+                            }
+                        } else {
+                        ?>
+                        <tr>
+                            <td colspan="3" class="text-center">Tidak ada data universitas</td>
+                        </tr>
+                        <?php } ?>
+                      </tbody>
                 </table>
                 </div>
               <!-- /.card-body -->
