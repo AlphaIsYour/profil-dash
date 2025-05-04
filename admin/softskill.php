@@ -79,11 +79,23 @@ $start = ($page - 1) * $limit;
                   </form>
                 </div><br>
               <div class="col-sm-12">
-                  <div class="alert alert-success" role="alert">Data Berhasil Ditambahkan</div>
-                  <div class="alert alert-success" role="alert">Data Berhasil Diubah</div>
+                <?php if(!empty($_GET['notif'])){?>
+                    <?php if($_GET['notif']=="tambahberhasil"){?>
+                    <div class="alert alert-success" role="alert">
+                    Data Berhasil Ditambahkan</div>
+                    <?php } else if($_GET['notif']=="editberhasil"){?>
+                    <div class="alert alert-success" role="alert">
+                    Data Berhasil Diubah</div>
+                    <?php } else if($_GET['notif']=="hapusberhasil"){?>
+                    <div class="alert alert-success" role="alert">
+                    Data Berhasil Dihapus</div>
+                    <?php }?>
+                <?php }?>
               </div>
+              
+              <div class="col-sm-12">
                 <table class="table table-bordered">
-                  <thead>                  
+                  <thead>                 
                     <tr>
                       <th width="5%">No</th>
                       <th width="80%">Soft Skill</th>
@@ -91,33 +103,95 @@ $start = ($page - 1) * $limit;
                     </tr>
                   </thead>
                   <tbody>
+                  <?php
+                        // Count total records for pagination
+                        $count_query = "SELECT COUNT(*) as total FROM `master_soft_skill`";
+                        if(!empty($search_query)) {
+                            $count_query .= " WHERE `soft_skill` LIKE ?";
+                        }
+                        $stmt = mysqli_prepare($koneksi, $count_query);
+                        
+                        if(!empty($search_query)) {
+                            $search_param = "%$search_query%";
+                            mysqli_stmt_bind_param($stmt, 's', $search_param);
+                        }
+                        
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        $row = mysqli_fetch_assoc($result);
+                        $total_records = $row['total'];
+                        $total_pages = ceil($total_records / $limit);
+                        
+                        // Main query for fetching softskill
+                        $sql_u = "SELECT `id_master_soft_skill`, `soft_skill` FROM `master_soft_skill`";
+                        if(!empty($search_query)) {
+                            $sql_u .= " WHERE `soft_skill` LIKE ?";
+                        }
+                        $sql_u .= " ORDER BY `soft_skill` LIMIT ?, ?";
+                        
+                        $stmt = mysqli_prepare($koneksi, $sql_u);
+                        
+                        if(!empty($search_query)) {
+                            $search_param = "%$search_query%";
+                            mysqli_stmt_bind_param($stmt, 'sii', $search_param, $start, $limit);
+                        } else {
+                            mysqli_stmt_bind_param($stmt, 'ii', $start, $limit);
+                        }
+                        
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        
+                        $no = $start + 1;
+                        if(mysqli_num_rows($result) > 0) {
+                            while($data_u = mysqli_fetch_assoc($result)){
+                                $id_master_soft_skill = $data_u['id_master_soft_skill'];
+                                $soft_skill = $data_u['soft_skill'];
+                        ?>
                     <tr>
-                      <td>1.</td>
-                      <td>Komunikasi</td>
+                      <td><?php echo $no;?></td>
+                      <td><?php echo htmlspecialchars($soft_skill);?></td>
                       <td align="center">
-                        <a href="editsoftskill.php" class="btn btn-xs btn-info"><i class="fas fa-edit"></i> Edit</a>
-                        <a href="#" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i> Hapus</a>
+                      <a href="editsoftskill.php?data=<?php echo htmlspecialchars($id_master_soft_skill);?>"
+                        class="btn btn-xs btn-info"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="javascript:if(confirm('Anda yakin ingin menghapus data <?php echo htmlspecialchars($soft_skill); ?>?'))window.location.href = 'softskill.php?aksi=hapus&data=<?php echo htmlspecialchars($id_master_soft_skill);?>'"
+                        class="btn btn-xs btn-warning"><i class="fas fa-trash"></i> Hapus</a>
                       </td>
                     </tr>
-                    <tr>
-                      <td>2.</td>
-                      <td>Kepemimpinan</td>
-                      <td align="center">
-                        <a href="editsoftskill.php" class="btn btn-xs btn-info"><i class="fas fa-edit"></i> Edit</a>
-                        <a href="#" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i> Hapus</a>
-                      </td>
-                    </tr>
+                    <?php 
+                            $no++;
+                            }
+                        } else {
+                        ?>
+                        <tr>
+                            <td colspan="3" class="text-center">Tidak ada data softskill</td>
+                        </tr>
+                        <?php } ?>
                   </tbody>
                 </table>
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
                 <ul class="pagination pagination-sm m-0 float-right">
-                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                <?php if($page > 1): ?>
+                    <li class="page-item"><a class="page-link" href="softskill.php?page=1<?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&laquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="softskill.php?page=<?php echo $page-1; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&lsaquo;</a></li>
+                  <?php endif; ?>
+                  
+                  <?php 
+                  $start_page = max(1, $page - 2);
+                  $end_page = min($total_pages, $page + 2);
+                  
+                  for($i = $start_page; $i <= $end_page; $i++): 
+                  ?>
+                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                      <a class="page-link" href="softskill.php?page=<?php echo $i; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>"><?php echo $i; ?></a>
+                    </li>
+                  <?php endfor; ?>
+                  
+                  <?php if($page < $total_pages): ?>
+                    <li class="page-item"><a class="page-link" href="softskill.php?page=<?php echo $page+1; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&rsaquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="softskill.php?page=<?php echo $total_pages; ?><?php echo !empty($search_query) ? '&katakunci='.urlencode($search_query) : ''; ?>">&raquo;</a></li>
+                  <?php endif; ?>
                 </ul>
               </div>
             </div>
