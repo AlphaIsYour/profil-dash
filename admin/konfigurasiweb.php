@@ -1,17 +1,15 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php'); 
 
-// Ambil data konfigurasi (asumsi hanya 1 baris)
 $sql_k = "SELECT `id_konfigurasi_web`, `logo`, `nama_web`, `tahun` FROM `konfigurasi_web` LIMIT 1";
 $query_k = mysqli_query($koneksi, $sql_k);
 $data_k = mysqli_fetch_assoc($query_k);
 
-// Set default jika data belum ada (misalnya saat setup awal)
-$id_konfigurasi_web = $data_k['id_konfigurasi_web'] ?? null; // Ambil ID jika ada
-$logo = $data_k['logo'] ?? 'default_logo.png'; // Default jika kosong
+$id_konfigurasi_web = $data_k['id_konfigurasi_web'] ?? null;
+$logo = $data_k['logo'] ?? 'default_logo.png';
 $nama_web = $data_k['nama_web'] ?? 'Nama Website Belum Diatur';
-$tahun = $data_k['tahun'] ?? date('Y'); // Default tahun ini
-$path_logo = "../images/"; // Path ke folder image dari file PHP ini
+$tahun = $data_k['tahun'] ?? date('Y');
+$path_logo = "../images/";
 
 ?>
 <!DOCTYPE html>
@@ -49,7 +47,6 @@ $path_logo = "../images/"; // Path ke folder image dari file PHP ini
               <div class="card-header">
                 <h3 class="card-title" style="margin-top:5px;"><i class="fas fa-list-alt"></i> Detail Konfigurasi</h3>
                 <div class="card-tools">
-                  <!-- Tombol Edit sekarang link ke file edit dengan ID (jika ada) -->
                   <a href="editkonfigurasiweb.php<?php echo $id_konfigurasi_web ? '?data=' . $id_konfigurasi_web : ''; ?>" class="btn btn-sm btn-info float-right">
                       <i class="fas fa-edit"></i> Edit Konfigurasi
                   </a>
@@ -67,7 +64,7 @@ $path_logo = "../images/"; // Path ke folder image dari file PHP ini
                     </div>
                    <?php } ?>
                 </div>
-                <?php if ($data_k) : // Tampilkan tabel hanya jika ada data ?>
+                <?php if ($data_k) : ?>
                 <table class="table table-bordered">
                     <tbody>
                       <tr>

@@ -1,10 +1,9 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 // --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
-        // Validasi ID adalah integer
         if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
              header("Location: universitas.php?notif=hapusgagal&msg=invalidid");
              exit;
@@ -12,7 +11,6 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
         $id_master_universitas = (int)$_GET['data'];
 
         // Hapus dari tabel master
-        // Ingat potensi masalah dengan FK ON DELETE RESTRICT
         $sql_delete = "DELETE FROM `master_universitas` WHERE `id_master_universitas` = ?";
         $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
 
@@ -23,9 +21,8 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
             if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
                 header("Location: universitas.php?notif=hapusberhasil");
             } else {
-                $error_info = mysqli_stmt_error($stmt_delete); // Cek error DB (misal karena FK restrict)
-                // Log error jika perlu: error_log("Gagal hapus universitas $id_master_universitas: $error_info");
-                header("Location: universitas.php?notif=hapusgagal&msg=failed" . (!empty($error_info) ? '_db' : '')); // Beri notif beda jika ada error DB
+                $error_info = mysqli_stmt_error($stmt_delete);
+                header("Location: universitas.php?notif=hapusgagal&msg=failed" . (!empty($error_info) ? '_db' : ''));
             }
             mysqli_stmt_close($stmt_delete);
         } else {
@@ -61,7 +58,6 @@ $start = ($page - 1) * $limit;
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -110,7 +106,7 @@ $start = ($page - 1) * $limit;
                     <div class="alert alert-success alert-dismissible fade show" role="alert"> Data Berhasil Dihapus <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                     <?php } else if ($_GET['notif'] == "hapusgagal") { ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert"> Data Gagal Dihapus. <?php echo (isset($_GET['msg']) && $_GET['msg'] == 'failed_db') ? ' Kemungkinan data masih digunakan (misal: Riwayat Pendidikan).' : ''; ?> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                     <?php } else if ($_GET['notif'] == "datanotfound") { // Jika nanti diperlukan ?>
+                     <?php } else if ($_GET['notif'] == "datanotfound") { ?>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert"> Data tidak ditemukan. <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                     <?php } ?>
                 <?php } ?>
@@ -132,7 +128,7 @@ $start = ($page - 1) * $limit;
                         $params_count = [];
                         $types_count = '';
                         if (!empty($search_query)) {
-                            $count_sql .= " WHERE `nama_universitas` LIKE ?"; // Pastikan nama kolom benar
+                            $count_sql .= " WHERE `nama_universitas` LIKE ?"; 
                             $search_param_count = "%" . $search_query . "%";
                             $params_count[] = &$search_param_count;
                             $types_count .= 's';
@@ -160,18 +156,17 @@ $start = ($page - 1) * $limit;
                         }
 
 
-                        // Main query for fetching universities
-                        $sql_data = "SELECT `id_master_universitas`, `nama_universitas` FROM `master_universitas`"; // Pastikan nama kolom benar
+                        $sql_data = "SELECT `id_master_universitas`, `nama_universitas` FROM `master_universitas`";
                         $params_data = [];
                         $types_data = '';
 
                         if (!empty($search_query)) {
-                            $sql_data .= " WHERE `nama_universitas` LIKE ?"; // Pastikan nama kolom benar
+                            $sql_data .= " WHERE `nama_universitas` LIKE ?"; 
                             $search_param_data = "%" . $search_query . "%";
                             $params_data[] = &$search_param_data;
                             $types_data .= 's';
                         }
-                        $sql_data .= " ORDER BY `nama_universitas` LIMIT ?, ?"; // Pastikan nama kolom benar
+                        $sql_data .= " ORDER BY `nama_universitas` LIMIT ?, ?";
                         $params_data[] = &$start;
                         $params_data[] = &$limit;
                         $types_data .= 'ii';
@@ -188,7 +183,7 @@ $start = ($page - 1) * $limit;
                                 $no = $start + 1;
                                 while ($data_u = mysqli_fetch_assoc($result_data)) {
                                     $id_master_universitas = $data_u['id_master_universitas'];
-                                    $nama_universitas = $data_u['nama_universitas']; // Nama variabel sudah benar
+                                    $nama_universitas = $data_u['nama_universitas'];
                             ?>
                     <tr>
                       <td class="text-center"><?php echo $no; ?></td>
@@ -217,12 +212,10 @@ $start = ($page - 1) * $limit;
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
-                <?php if ($total_records > 0 && $total_pages > 1) : // Tampilkan pagination hanya jika perlu ?>
+                <?php if ($total_records > 0 && $total_pages > 1) : ?>
                 <ul class="pagination pagination-sm m-0 float-right">
                   <?php
                   $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
-                  // Logika pagination (copy dari topik.php, sudah robust)
-                  // Tombol First dan Previous
                   if ($page > 1) {
                       echo "<li class='page-item'><a class='page-link' href='universitas.php?page=1{$query_string}'>« First</a></li>";
                       echo "<li class='page-item'><a class='page-link' href='universitas.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>";
@@ -281,11 +274,8 @@ $start = ($page - 1) * $limit;
 <!-- ./wrapper -->
 <?php include("includes/script.php") ?>
 <script>
-// Fungsi konfirmasi hapus universitas
 function konfirmasiHapusUniversitas(nama, id, katakunci, page) {
   let pesanKonfirmasi = `Anda yakin ingin menghapus universitas: ${nama}?`;
-  // Sesuaikan pesan ini jika Anda tahu ada potensi data terkait (misal dari tabel pendidikan)
-  // pesanKonfirmasi += "\n\nCATATAN: Jika universitas ini masih digunakan dalam riwayat pendidikan, penghapusan mungkin gagal atau data terkait bisa terpengaruh tergantung pengaturan database.";
 
   if (confirm(pesanKonfirmasi)) {
     window.location.href = `universitas.php?aksi=hapus&data=${id}&katakunci=${encodeURIComponent(katakunci)}&page=${page}`;
