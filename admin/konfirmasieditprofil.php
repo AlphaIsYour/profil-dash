@@ -5,14 +5,12 @@ if(isset($_SESSION['id_user'])){
     $id_user = $_SESSION['id_user'];
     $nama = $_POST['nama'];
     $email = $_POST['email'];
-    $deskripsi = $_POST['deskripsi']; // Add this line to capture deskripsi
+    $deskripsi = $_POST['deskripsi'];
 
-    //get foto
     $sql_f = "SELECT `foto` FROM `user` WHERE `id_user`='$id_user'";
     $query_f = mysqli_query($koneksi,$sql_f);
     while($data_f = mysqli_fetch_row($query_f)){
         $foto = $data_f[0];
-        //echo $foto;
     }
 
     if(empty($nama)){
@@ -31,12 +29,10 @@ if(isset($_SESSION['id_user'])){
             $sql = "update `user` set `nama`='$nama',
                    `email`='$email', `foto`='$nama_file', `deskripsi`='$deskripsi'
                    where `id_user`='$id_user'";
-            //echo $sql;
             mysqli_query($koneksi,$sql);
         }else{
             $sql = "update `user` set `nama`='$nama', `email`='$email', 
                    `deskripsi`='$deskripsi' where `id_user`='$id_user'";
-            //echo $sql;
             mysqli_query($koneksi,$sql);
         }
         header("Location:profil.php?notif=editberhasil");
