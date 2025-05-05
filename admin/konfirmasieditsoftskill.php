@@ -1,14 +1,11 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
-// Ambil data dari form POST
 $id_master_soft_skill = isset($_POST['id_master_soft_skill']) ? mysqli_real_escape_string($koneksi, $_POST['id_master_soft_skill']) : null;
 $softskill_baru = isset($_POST['softskill']) ? trim($_POST['softskill']) : '';
 
 // 1. Validasi dasar
 if (empty($id_master_soft_skill) || empty($softskill_baru)) {
-    // Jika ID atau nama baru kosong, kembali ke form edit dengan notifikasi
-    // Tambahkan ID ke URL redirect agar form bisa load data lagi
     header("Location: editsoftskill.php?data=" . urlencode($id_master_soft_skill) . "¬if=editkosong");
     exit;
 }
@@ -22,12 +19,11 @@ if ($stmt_check === false) {
     exit;
 }
 
-mysqli_stmt_bind_param($stmt_check, 'si', $softskill_baru, $id_master_soft_skill); // 's' untuk softskill baru, 'i' untuk ID
+mysqli_stmt_bind_param($stmt_check, 'si', $softskill_baru, $id_master_soft_skill);
 mysqli_stmt_execute($stmt_check);
 mysqli_stmt_store_result($stmt_check);
 
 if (mysqli_stmt_num_rows($stmt_check) > 0) {
-    // Nama baru sudah digunakan oleh data lain
     mysqli_stmt_close($stmt_check);
     header("Location: editsoftskill.php?data=" . urlencode($id_master_soft_skill) . "¬if=duplikat");
     exit;
@@ -45,20 +41,13 @@ if ($stmt_update === false) {
 
 mysqli_stmt_bind_param($stmt_update, 'si', $softskill_baru, $id_master_soft_skill);
 
-// Eksekusi update dan cek hasil
 if (mysqli_stmt_execute($stmt_update)) {
-    // Jika berhasil
     mysqli_stmt_close($stmt_update);
     header("Location: softskill.php?notif=editberhasil");
     exit;
 } else {
-    // Jika gagal
     mysqli_stmt_close($stmt_update);
-    // Opsional: Log error mysqli_stmt_error($stmt_update)
     header("Location: editsoftskill.php?data=" . urlencode($id_master_soft_skill) . "¬if=editgagal");
     exit;
 }
-
-// Tutup koneksi (opsional)
-// mysqli_close($koneksi);
 ?>

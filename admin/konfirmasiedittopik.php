@@ -1,13 +1,11 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
-// Ambil data dari form POST
 $id_master_topik = isset($_POST['id_master_topik']) && filter_var($_POST['id_master_topik'], FILTER_VALIDATE_INT)
                         ? (int)$_POST['id_master_topik']
                         : null;
 $topik_baru = isset($_POST['topik']) ? trim($_POST['topik']) : '';
 
-// Buat URL redirect kembali ke form edit jika ada error
 $redirect_url = "edittopik.php?data=" . urlencode($id_master_topik);
 
 // 1. Validasi dasar
@@ -26,7 +24,6 @@ $sql_check = "SELECT `id_master_topik` FROM `master_topik` WHERE `topik` = ? AND
 $stmt_check = mysqli_prepare($koneksi, $sql_check);
 
 if (!$stmt_check) {
-    // error_log("Prepare failed (check edit): " . mysqli_error($koneksi));
     header("Location: {$redirect_url}¬if=editgagal&msg=prepare");
     exit;
 }
@@ -47,7 +44,6 @@ $sql_update = "UPDATE `master_topik` SET `topik` = ? WHERE `id_master_topik` = ?
 $stmt_update = mysqli_prepare($koneksi, $sql_update);
 
 if (!$stmt_update) {
-    // error_log("Prepare failed (update): " . mysqli_error($koneksi));
     header("Location: {$redirect_url}¬if=editgagal&msg=prepare");
     exit;
 }
@@ -60,17 +56,9 @@ if (mysqli_stmt_execute($stmt_update)) {
     header("Location: topik.php?notif=editberhasil");
     exit;
 } else {
-    // $error_msg = mysqli_stmt_error($stmt_update);
     mysqli_stmt_close($stmt_update);
-    // error_log("Execute failed (update): " . $error_msg);
-     // Cek jika error karena UNIQUE constraint
-    // if(mysqli_errno($koneksi) == 1062) {
-    //    header("Location: {$redirect_url}¬if=duplikat");
-    // } else {
         header("Location: {$redirect_url}¬if=editgagal&msg=execute");
-    // }
     exit;
 }
 
-// mysqli_close($koneksi); // Opsional
 ?>

@@ -54,9 +54,14 @@ $foto = $data[2];
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <div class="col-sm-12">
-                    <div class="alert alert-success" role="alert">Data Berhasil Diubah</div>
-                </div>
+              <div class="col-sm-12">
+                <?php if (!empty($_GET['notif'])) { ?>
+                    <?php if ($_GET['notif'] == "tambahberhasil") { ?>
+                    <?php } else if ($_GET['notif'] == "editberhasil") { ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert"> Data Berhasil Diubah <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                    <?php } ?>
+                <?php } ?>
+              </div>
                 <table class="table table-bordered">
  <tbody>
  <tr>
