@@ -1,13 +1,65 @@
+<?php
+include('../koneksi/koneksi.php'); // Sesuaikan path
+
+// --- Logic Hapus ---
+if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
+  if ($_GET['aksi'] == 'hapus') {
+      // Validasi ID adalah integer
+      if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
+           header("Location: riwayatpekerjaan.php?notif=hapusgagal&msg=invalidid");
+           exit;
+      }
+      $id_riwayat_pekerjaan = (int)$_GET['data'];
+
+      // PERIKSA NAMA TABEL DAN KOLOM DI BAWAH INI!
+      $sql_delete = "DELETE FROM `riwayat_pekerjaan` WHERE `id_riwayat_pekerjaan` = ?";
+      $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
+
+      if ($stmt_delete) {
+          mysqli_stmt_bind_param($stmt_delete, 'i', $id_riwayat_pekerjaan); // 'i' for integer ID
+          mysqli_stmt_execute($stmt_delete);
+
+          // Cek apakah ada baris yang terhapus
+          if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
+              header("Location: riwayatpekerjaan.php?notif=hapusberhasil");
+          } else {
+              // Bisa karena ID tidak ditemukan atau error lain
+              $error_info = mysqli_stmt_error($stmt_delete); // Cek error spesifik
+              // Log error: error_log("Gagal hapus pekerjaan ID $id_riwayat_pekerjaan: $error_info");
+              header("Location: riwayatpekerjaan.php?notif=hapusgagal&msg=notfound"); // Asumsi not found jika 0 row affected
+          }
+          mysqli_stmt_close($stmt_delete);
+      } else {
+          // Gagal prepare statement (mungkin karena typo nama tabel/kolom?)
+          // Log error: error_log("Prepare failed (delete pekerjaan): " . mysqli_error($koneksi));
+          header("Location: riwayatpekerjaan.php?notif=hapusgagal&msg=prepare");
+      }
+      exit;
+  }
+}
+
+// --- Logic Search & Pagination ---
+$search_query = "";
+if (isset($_GET['katakunci'])) {
+    $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
+}
+
+$limit = 10;
+$page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]) : 1;
+if ($page === false) $page = 1;
+$start = ($page - 1) * $limit;
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
-<?php include("includes/head.php") ?> 
+<?php include("includes/head.php") ?>
+<title>Riwayat Pekerjaan</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 <?php include("includes/header.php") ?>
-
-  <?php include("includes/sidebar.php") ?>
+<?php include("includes/sidebar.php") ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -15,7 +67,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fa fa-suitcase"></i> Riwayat Pekerjaan</h3>
+            <h3><i class="fas fa-briefcase"></i> Riwayat Pekerjaan</h3> <!-- Icon ganti -->
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -30,73 +82,136 @@
     <section class="content">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title" style="margin-top:5px;"><i class="fas fa-list-ul"></i> Daftar  Riwayat Pekerjaan</h3>
+                <h3 class="card-title" style="margin-top:5px;"><i class="fas fa-list-ul"></i> Daftar Riwayat Pekerjaan</h3>
                 <div class="card-tools">
                   <a href="tambahriwayatpekerjaan.php" class="btn btn-sm btn-info float-right">
-                  <i class="fas fa-plus"></i> Tambah  Riwayat Pekerjaan</a>
+                  <i class="fas fa-plus"></i> Tambah Riwayat Pekerjaan</a>
                 </div>
               </div>
               <div class="card-body">
               <div class="col-md-12">
-                  <form method="" action="">
+                  <form method="GET" action="riwayatpekerjaan.php">
                     <div class="row">
-                        <div class="col-md-4 bottom-10">
-                          <input type="text" class="form-control" id="kata_kunci" name="katakunci">
+                        <div class="col-md-4 mb-2">
+                          <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari Posisi/Perusahaan..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
-                        <div class="col-md-5 bottom-10">
-                          <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>&nbsp; Search</button>
+                        <div class="col-md-5 mb-2">
+                          <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>  Cari</button>
                         </div>
                     </div>
                   </form>
                 </div><br>
               <div class="col-sm-12">
-                  <div class="alert alert-success" role="alert">Data Berhasil Ditambahkan</div>
-                  <div class="alert alert-success" role="alert">Data Berhasil Diubah</div>
+                 <?php if (!empty($_GET['notif'])) { ?>
+                      <?php if ($_GET['notif'] == "tambahberhasil") { ?>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert"> Data Berhasil Ditambahkan <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                      <?php } else if ($_GET['notif'] == "editberhasil") { ?>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert"> Data Berhasil Diubah <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                       <?php } else if ($_GET['notif'] == "hapusberhasil") { ?>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert"> Data Berhasil Dihapus <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                       <?php } else if ($_GET['notif'] == "hapusgagal") { ?>
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert"> Data Gagal Dihapus <?php echo (isset($_GET['msg']) && $_GET['msg'] == 'notfound') ? '(Data tidak ditemukan)' : ''; ?> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                      <?php } ?>
+                  <?php } ?>
               </div>
-              <table class="table table-bordered">
-                    <thead>                  
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
                       <tr>
-                        <th width="5%">No</th>
-                        <th width="20%">Tahun</th>
-                        <th width="30%">Posisi</th>
+                        <th width="5%" class="text-center">No</th>
+                        <th width="15%">Tahun</th>
+                        <th width="35%">Posisi</th>
                         <th width="30%">Perusahaan</th>
                         <th width="15%"><center>Aksi</center></th>
                       </tr>
                     </thead>
                     <tbody>
+                       <?php
+                            // Query count
+                            $count_sql = "SELECT COUNT(*) as total FROM `riwayat_pekerjaan` rp"; // Ganti nama tabel jika perlu
+                            $params_count = []; $types_count = '';
+                            if (!empty($search_query)) {
+                                $count_sql .= " WHERE rp.`posisi` LIKE ? OR rp.`perusahaan` LIKE ?";
+                                $search_param_like = "%" . $search_query . "%";
+                                $params_count[] = &$search_param_like;
+                                $params_count[] = &$search_param_like;
+                                $types_count .= 'ss';
+                            }
+
+                            $total_records = 0; $total_pages = 0;
+                            $stmt_count = mysqli_prepare($koneksi, $count_sql);
+                            if($stmt_count){
+                                if(!empty($search_query)){ mysqli_stmt_bind_param($stmt_count, $types_count, ...$params_count); }
+                                mysqli_stmt_execute($stmt_count);
+                                $result_count = mysqli_stmt_get_result($stmt_count);
+                                if($result_count){ $row_count = mysqli_fetch_assoc($result_count); $total_records = $row_count['total']; $total_pages = ceil($total_records / $limit); }
+                                mysqli_stmt_close($stmt_count);
+                            } else { echo "<tr><td colspan='5' class='text-center text-danger'>Error menghitung data.</td></tr>"; }
+
+
+                            // Query data
+                            $sql_data = "SELECT rp.`id_riwayat_pekerjaan`, rp.`tahun`, rp.`posisi`, rp.`perusahaan` FROM `riwayat_pekerjaan` rp"; // Ganti nama tabel jika perlu
+                            $params_data = []; $types_data = '';
+                            if (!empty($search_query)) {
+                                $sql_data .= " WHERE rp.`posisi` LIKE ? OR rp.`perusahaan` LIKE ?";
+                                // Parameter sama dengan count
+                                $params_data[] = &$search_param_like; $params_data[] = &$search_param_like; $types_data .= 'ss';
+                            }
+                            $sql_data .= " ORDER BY rp.`tahun` DESC LIMIT ?, ?"; // Order by tahun terbaru
+                            $params_data[] = &$start; $params_data[] = &$limit; $types_data .= 'ii';
+
+                            $stmt_data = mysqli_prepare($koneksi, $sql_data);
+                            if ($stmt_data) {
+                                if (!empty($params_data)) { mysqli_stmt_bind_param($stmt_data, $types_data, ...$params_data); }
+                                mysqli_stmt_execute($stmt_data);
+                                $result_data = mysqli_stmt_get_result($stmt_data);
+
+                                if ($result_data && mysqli_num_rows($result_data) > 0) {
+                                    $no = $start + 1;
+                                    while ($data_pk = mysqli_fetch_assoc($result_data)) {
+                                        $id_pk = $data_pk['id_riwayat_pekerjaan'];
+                                        $tahun_pk = $data_pk['tahun'];
+                                        $posisi_pk = $data_pk['posisi'];
+                                        $perusahaan_pk = $data_pk['perusahaan'];
+                            ?>
                       <tr>
-                        <td>1.</td>
-                        <td>2019-2021</td>
-                        <td>Junior Web Developer</td>
-                        <td>XYZ Corp</td>
+                        <td class="text-center"><?php echo $no; ?></td>
+                        <td><?php echo htmlspecialchars($tahun_pk); ?></td>
+                        <td><?php echo htmlspecialchars($posisi_pk); ?></td>
+                        <td><?php echo htmlspecialchars($perusahaan_pk); ?></td>
                         <td align="center">
-                          <a href="editriwayatpekerjaan.php" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
-                          <a href="#" class="btn btn-xs btn-warning"><i class="fas fa-trash" title="Hapus"></i></a>                         
+                          <a href="editriwayatpekerjaan.php?data=<?php echo $id_pk; ?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
+                           <a href="javascript:void(0);" class="btn btn-xs btn-warning" title="Hapus" onclick="konfirmasiHapusPekerjaan('<?php echo htmlspecialchars(addslashes($posisi_pk . ' di ' . $perusahaan_pk)); ?>', '<?php echo $id_pk; ?>', '<?php echo urlencode($search_query); ?>', '<?php echo $page; ?>')">
+                             <i class="fas fa-trash"></i></a>
                         </td>
                       </tr>
-                      <tr>
-                        <td>2.</td>
-                        <td>2021-2023</td>
-                        <td>Senior Web Developer</td>
-                        <td>ABC Ltd.</td>
-                        <td align="center">
-                          <a href="editriwayatpekerjaan.php" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
-                           <a href="#" class="btn btn-xs btn-warning"><i class="fas fa-trash" title="Hapus"></i></a>                         
-                        </td>
-                      </tr>
-                      
+                      <?php
+                                    $no++;
+                                    } // End while
+                                } else { echo "<tr><td colspan='5' class='text-center'>" . ($total_records > 0 ? "Tidak ada data di halaman ini." : "Belum ada data riwayat pekerjaan.") . "</td></tr>"; }
+                                mysqli_stmt_close($stmt_data);
+                            } else { echo "<tr><td colspan='5' class='text-center text-danger'>Error mengambil data riwayat pekerjaan.</td></tr>"; }
+                      ?>
                     </tbody>
-                  </table>  
+                  </table>
+                </div>
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
+                <?php if ($total_records > 0 && $total_pages > 1) : ?>
                 <ul class="pagination pagination-sm m-0 float-right">
-                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                   <?php
+                      $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
+                      // Logika Pagination (copy dari sebelumnya)
+                      if ($page > 1) { echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page=1{$query_string}'>« First</a></li>"; echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>"; } else { echo "<li class='page-item disabled'><span class='page-link'>« First</span></li>"; echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>"; }
+                      $num_links = 2; $start_loop = max(1, $page - $num_links); $end_loop = min($total_pages, $page + $num_links);
+                      if ($start_loop > 1) { echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page=1{$query_string}'>1</a></li>"; if ($start_loop > 2) { echo "<li class='page-item disabled'><span class='page-link'>...</span></li>"; } }
+                      for ($i = $start_loop; $i <= $end_loop; $i++) { echo "<li class='page-item ".($i == $page ? 'active' : '')."'><a class='page-link' href='riwayatpekerjaan.php?page={$i}{$query_string}'>{$i}</a></li>"; }
+                      if ($end_loop < $total_pages) { if ($end_loop < $total_pages - 1) { echo "<li class='page-item disabled'><span class='page-link'>...</span></li>"; } echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page={$total_pages}{$query_string}'>{$total_pages}</a></li>"; }
+                      if ($page < $total_pages) { echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page=".($page + 1)."{$query_string}'>Next ›</a></li>"; echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page={$total_pages}{$query_string}'>Last »</a></li>"; } else { echo "<li class='page-item disabled'><span class='page-link'>Next ›</span></li>"; echo "<li class='page-item disabled'><span class='page-link'>Last »</span></li>"; }
+                    ?>
                 </ul>
+                <?php endif; ?>
               </div>
             </div>
             <!-- /.card -->
@@ -105,10 +220,16 @@
     <!-- /.content -->
   </div>
   <?php include("includes/footer.php") ?>
-
 </div>
 <!-- ./wrapper -->
 
 <?php include("includes/script.php") ?>
+<script>
+function konfirmasiHapusPekerjaan(deskripsi, id, katakunci, page) {
+  if (confirm(`Anda yakin ingin menghapus riwayat: ${deskripsi}?`)) {
+    window.location.href = `riwayatpekerjaan.php?aksi=hapus&data=${id}&katakunci=${encodeURIComponent(katakunci)}&page=${page}`;
+  }
+}
+</script>
 </body>
 </html>
