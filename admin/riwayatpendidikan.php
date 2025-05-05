@@ -1,17 +1,15 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 // --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
-        // Validasi ID
         if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
              header("Location: riwayatpendidikan.php?notif=hapusgagal&msg=invalidid");
              exit;
         }
         $id_riwayat_pendidikan = (int)$_GET['data'];
 
-        // Hapus data riwayat pendidikan
         $sql_delete = "DELETE FROM `riwayat_pendidikan` WHERE `id_riwayat_pendidikan` = ?";
         $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
 
@@ -22,7 +20,6 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
             if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
                 header("Location: riwayatpendidikan.php?notif=hapusberhasil");
             } else {
-                // ID tidak ditemukan atau error lain
                 header("Location: riwayatpendidikan.php?notif=hapusgagal&msg=notfound");
             }
             mysqli_stmt_close($stmt_delete);
@@ -59,7 +56,6 @@ $start = ($page - 1) * $limit;
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -72,7 +68,7 @@ $start = ($page - 1) * $limit;
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -88,16 +84,15 @@ $start = ($page - 1) * $limit;
               <!-- /.card-header -->
               <div class="card-body">
               <div class="col-md-12">
-                  <form method="GET" action="riwayatpendidikan.php"> <!-- Method GET -->
+                  <form method="GET" action="riwayatpendidikan.php">
                     <div class="row">
                         <div class="col-md-4 mb-2"> <!-- mb-2 -->
-                          <!-- name="katakunci" -->
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari berdasarkan Jurusan/Tahun..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 mb-2">
                           <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>  Cari</button>
                         </div>
-                    </div><!-- .row -->
+                    </div>
                   </form>
                 </div><br>
               <div class="col-sm-12">
@@ -127,7 +122,6 @@ $start = ($page - 1) * $limit;
                     </thead>
                     <tbody>
                       <?php
-                            // Query utama dengan JOIN untuk mengambil nama jenjang dan universitas
                             $sql_data = "SELECT rp.`id_riwayat_pendidikan`, rp.`tahun`, mj.`jenjang`, rp.`jurusan`, mu.`nama_universitas`
                                          FROM `riwayat_pendidikan` rp
                                          LEFT JOIN `master_jenjang` mj ON rp.`id_master_jenjang` = mj.`id_master_jenjang`
@@ -136,7 +130,6 @@ $start = ($page - 1) * $limit;
                             $params_data = [];
                             $types_data = '';
 
-                            // Kondisi pencarian (contoh: cari berdasarkan jurusan ATAU tahun)
                             if (!empty($search_query)) {
                                 $sql_data .= " WHERE rp.`jurusan` LIKE ? OR rp.`tahun` LIKE ?";
                                 $search_param_like = "%" . $search_query . "%";
@@ -145,14 +138,13 @@ $start = ($page - 1) * $limit;
                                 $types_data .= 'ss';
                             }
 
-                            // Query untuk count total record (dengan kondisi search yang sama)
                             $count_sql = "SELECT COUNT(rp.`id_riwayat_pendidikan`) as total
                                           FROM `riwayat_pendidikan` rp
                                           LEFT JOIN `master_jenjang` mj ON rp.`id_master_jenjang` = mj.`id_master_jenjang`
                                           LEFT JOIN `master_universitas` mu ON rp.`id_master_universitas` = mu.`id_master_universitas`";
                              if (!empty($search_query)) {
                                 $count_sql .= " WHERE rp.`jurusan` LIKE ? OR rp.`tahun` LIKE ?";
-                                // Parameter count sama dengan parameter data jika ada search
+                                
                             }
 
                             $total_records = 0;
@@ -160,7 +152,6 @@ $start = ($page - 1) * $limit;
                             $stmt_count = mysqli_prepare($koneksi, $count_sql);
                             if($stmt_count){
                                 if(!empty($search_query)){
-                                    // Bind parameter untuk count (sama dengan data)
                                     mysqli_stmt_bind_param($stmt_count, $types_data, ...$params_data);
                                 }
                                 mysqli_stmt_execute($stmt_count);
@@ -175,9 +166,7 @@ $start = ($page - 1) * $limit;
                                  echo "<tr><td colspan='6' class='text-center text-danger'>Error menghitung data.</td></tr>";
                             }
 
-
-                            // Tambahkan ORDER BY dan LIMIT ke query utama
-                            $sql_data .= " ORDER BY rp.`tahun` DESC, mj.`jenjang` LIMIT ?, ?"; // Order by tahun terbaru dulu
+                            $sql_data .= " ORDER BY rp.`tahun` DESC, mj.`jenjang` LIMIT ?, ?";
                             $params_data[] = &$start;
                             $params_data[] = &$limit;
                             $types_data .= 'ii';
@@ -195,16 +184,16 @@ $start = ($page - 1) * $limit;
                                     while ($data_rp = mysqli_fetch_assoc($result_data)) {
                                         $id_rp = $data_rp['id_riwayat_pendidikan'];
                                         $tahun_rp = $data_rp['tahun'];
-                                        $jenjang_rp = $data_rp['jenjang'] ?? '<span class="text-muted">N/A</span>'; // Handle jika jenjang terhapus/null
+                                        $jenjang_rp = $data_rp['jenjang'] ?? '<span class="text-muted">N/A</span>'; 
                                         $jurusan_rp = $data_rp['jurusan'];
-                                        $univ_rp = $data_rp['nama_universitas'] ?? '<span class="text-muted">N/A</span>'; // Handle jika univ terhapus/null
+                                        $univ_rp = $data_rp['nama_universitas'] ?? '<span class="text-muted">N/A</span>';
                             ?>
                       <tr>
                         <td class="text-center"><?php echo $no; ?></td>
                         <td><?php echo htmlspecialchars($tahun_rp); ?></td>
-                        <td><?php echo $jenjang_rp; // Sudah dihandle null/html ?></td>
+                        <td><?php echo $jenjang_rp;?></td>
                         <td><?php echo htmlspecialchars($jurusan_rp); ?></td>
-                        <td><?php echo $univ_rp; // Sudah dihandle null/html ?></td>
+                        <td><?php echo $univ_rp; ?></td>
                         <td align="center">
                           <a href="editriwayatpendidikan.php?data=<?php echo $id_rp; ?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
                           <a href="javascript:void(0);" class="btn btn-xs btn-warning" title="Hapus" onclick="konfirmasiHapusRiwayat('<?php echo htmlspecialchars($jurusan_rp . ' (' . $tahun_rp . ')'); ?>', '<?php echo $id_rp; ?>', '<?php echo urlencode($search_query); ?>', '<?php echo $page; ?>')">
@@ -214,7 +203,7 @@ $start = ($page - 1) * $limit;
                       </tr>
                       <?php
                                     $no++;
-                                    } // End while
+                                    }
                                 } else {
                                      echo "<tr><td colspan='6' class='text-center'>" . ($total_records > 0 ? "Tidak ada data di halaman ini." : "Belum ada data riwayat pendidikan.") . "</td></tr>";
                                 }
@@ -233,7 +222,6 @@ $start = ($page - 1) * $limit;
                 <ul class="pagination pagination-sm m-0 float-right">
                    <?php
                       $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
-                      // Logika Pagination (copy dari sebelumnya)
                       if ($page > 1) {
                           echo "<li class='page-item'><a class='page-link' href='riwayatpendidikan.php?page=1{$query_string}'>« First</a></li>";
                           echo "<li class='page-item'><a class='page-link' href='riwayatpendidikan.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>";
@@ -256,11 +244,9 @@ $start = ($page - 1) * $limit;
     </section>
     <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
   <?php include("includes/footer.php") ?>
 
 </div>
-<!-- ./wrapper -->
 
 <?php include("includes/script.php") ?>
 <script>
