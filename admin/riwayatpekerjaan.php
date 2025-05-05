@@ -1,44 +1,36 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php'); 
 
-// --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
   if ($_GET['aksi'] == 'hapus') {
-      // Validasi ID adalah integer
       if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
            header("Location: riwayatpekerjaan.php?notif=hapusgagal&msg=invalidid");
            exit;
       }
       $id_riwayat_pekerjaan = (int)$_GET['data'];
 
-      // PERIKSA NAMA TABEL DAN KOLOM DI BAWAH INI!
       $sql_delete = "DELETE FROM `riwayat_pekerjaan` WHERE `id_riwayat_pekerjaan` = ?";
       $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
 
       if ($stmt_delete) {
-          mysqli_stmt_bind_param($stmt_delete, 'i', $id_riwayat_pekerjaan); // 'i' for integer ID
+          mysqli_stmt_bind_param($stmt_delete, 'i', $id_riwayat_pekerjaan);
           mysqli_stmt_execute($stmt_delete);
 
-          // Cek apakah ada baris yang terhapus
           if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
               header("Location: riwayatpekerjaan.php?notif=hapusberhasil");
           } else {
-              // Bisa karena ID tidak ditemukan atau error lain
-              $error_info = mysqli_stmt_error($stmt_delete); // Cek error spesifik
-              // Log error: error_log("Gagal hapus pekerjaan ID $id_riwayat_pekerjaan: $error_info");
-              header("Location: riwayatpekerjaan.php?notif=hapusgagal&msg=notfound"); // Asumsi not found jika 0 row affected
+
+              $error_info = mysqli_stmt_error($stmt_delete); 
+              header("Location: riwayatpekerjaan.php?notif=hapusgagal&msg=notfound"); 
           }
           mysqli_stmt_close($stmt_delete);
       } else {
-          // Gagal prepare statement (mungkin karena typo nama tabel/kolom?)
-          // Log error: error_log("Prepare failed (delete pekerjaan): " . mysqli_error($koneksi));
           header("Location: riwayatpekerjaan.php?notif=hapusgagal&msg=prepare");
       }
       exit;
   }
 }
 
-// --- Logic Search & Pagination ---
 $search_query = "";
 if (isset($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
@@ -61,13 +53,12 @@ $start = ($page - 1) * $limit;
 <?php include("includes/header.php") ?>
 <?php include("includes/sidebar.php") ?>
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fas fa-briefcase"></i> Riwayat Pekerjaan</h3> <!-- Icon ganti -->
+            <h3><i class="fas fa-briefcase"></i> Riwayat Pekerjaan</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -149,15 +140,15 @@ $start = ($page - 1) * $limit;
                             } else { echo "<tr><td colspan='5' class='text-center text-danger'>Error menghitung data.</td></tr>"; }
 
 
-                            // Query data
-                            $sql_data = "SELECT rp.`id_riwayat_pekerjaan`, rp.`tahun`, rp.`posisi`, rp.`perusahaan` FROM `riwayat_pekerjaan` rp"; // Ganti nama tabel jika perlu
+                            
+                            $sql_data = "SELECT rp.`id_riwayat_pekerjaan`, rp.`tahun`, rp.`posisi`, rp.`perusahaan` FROM `riwayat_pekerjaan` rp"; 
                             $params_data = []; $types_data = '';
                             if (!empty($search_query)) {
                                 $sql_data .= " WHERE rp.`posisi` LIKE ? OR rp.`perusahaan` LIKE ?";
-                                // Parameter sama dengan count
+                                
                                 $params_data[] = &$search_param_like; $params_data[] = &$search_param_like; $types_data .= 'ss';
                             }
-                            $sql_data .= " ORDER BY rp.`tahun` DESC LIMIT ?, ?"; // Order by tahun terbaru
+                            $sql_data .= " ORDER BY rp.`tahun` DESC LIMIT ?, ?";
                             $params_data[] = &$start; $params_data[] = &$limit; $types_data .= 'ii';
 
                             $stmt_data = mysqli_prepare($koneksi, $sql_data);
@@ -187,7 +178,7 @@ $start = ($page - 1) * $limit;
                       </tr>
                       <?php
                                     $no++;
-                                    } // End while
+                                    }
                                 } else { echo "<tr><td colspan='5' class='text-center'>" . ($total_records > 0 ? "Tidak ada data di halaman ini." : "Belum ada data riwayat pekerjaan.") . "</td></tr>"; }
                                 mysqli_stmt_close($stmt_data);
                             } else { echo "<tr><td colspan='5' class='text-center text-danger'>Error mengambil data riwayat pekerjaan.</td></tr>"; }
@@ -196,13 +187,11 @@ $start = ($page - 1) * $limit;
                   </table>
                 </div>
               </div>
-              <!-- /.card-body -->
               <div class="card-footer clearfix">
                 <?php if ($total_records > 0 && $total_pages > 1) : ?>
                 <ul class="pagination pagination-sm m-0 float-right">
                    <?php
                       $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
-                      // Logika Pagination (copy dari sebelumnya)
                       if ($page > 1) { echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page=1{$query_string}'>« First</a></li>"; echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>"; } else { echo "<li class='page-item disabled'><span class='page-link'>« First</span></li>"; echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>"; }
                       $num_links = 2; $start_loop = max(1, $page - $num_links); $end_loop = min($total_pages, $page + $num_links);
                       if ($start_loop > 1) { echo "<li class='page-item'><a class='page-link' href='riwayatpekerjaan.php?page=1{$query_string}'>1</a></li>"; if ($start_loop > 2) { echo "<li class='page-item disabled'><span class='page-link'>...</span></li>"; } }
