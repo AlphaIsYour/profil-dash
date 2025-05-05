@@ -11,7 +11,6 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -24,7 +23,7 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -35,7 +34,6 @@
                 <div class="card-tools">
                 </div>
               </div>
-              <!-- /.card-header -->
               <div class="card-body">
               <div class="col-md-12">
                   <form method="" action="">
@@ -46,7 +44,7 @@
                         <div class="col-md-5 bottom-10">
                           <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>&nbsp; Search</button>
                         </div>
-                    </div><!-- .row -->
+                    </div>
                   </form>
                 </div><br>
               <div class="col-sm-12">

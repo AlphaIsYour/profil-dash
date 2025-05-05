@@ -2,10 +2,8 @@
 session_start();
 include('../koneksi/koneksi.php');
 $id_user = $_SESSION['id_user'];
-//get profil
 $sql = "select `nama`, `email`,`foto` from `user`
 where `id_user`='$id_user'";
-//echo $sql;
 $query = mysqli_query($koneksi, $sql);
 while($data = mysqli_fetch_row($query)){
 $nama = $data[0];
@@ -28,7 +26,6 @@ $foto = $data[2];
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -41,7 +38,7 @@ $foto = $data[2];
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -52,7 +49,6 @@ $foto = $data[2];
                   <a href="editprofil.php" class="btn btn-sm btn-info float-right"><i class="fas fa-edit"></i> Edit Profil</a>
                 </div>
               </div>
-              <!-- /.card-header -->
               <div class="card-body">
               <div class="col-sm-12">
                 <?php if (!empty($_GET['notif'])) { ?>
