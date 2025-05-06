@@ -50,7 +50,6 @@ while($data_d = mysqli_fetch_row($query_d)){
       </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
 
     <div class="card card-info">
@@ -60,8 +59,6 @@ while($data_d = mysqli_fetch_row($query_d)){
           <a href="profil.php" class="btn btn-sm btn-warning float-right"><i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
         </div>
       </div>
-      <!-- /.card-header -->
-      <!-- form start -->
       </br>
       <div class="col-sm-10">
           <?php if((!empty($_GET['notif']))&&($_GET['notif']=="editkosong")){?>
