@@ -47,7 +47,6 @@ $path_logo = "../image/";
       </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="card card-info">
             <div class="card-header">
@@ -57,12 +56,10 @@ $path_logo = "../image/";
                     <i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
                 </div>
             </div>
-            <!-- /.card-header -->
 
-            <!-- Form Start -->
             <form class="form-horizontal" method="post" action="konfirmasieditkonfigurasiweb.php" enctype="multipart/form-data">
                 <div class="card-body">
-                    <div class="col-sm-10 offset-sm-1"> <!-- Atur posisi notifikasi -->
+                    <div class="col-sm-10 offset-sm-1">
                         <?php if (!empty($_GET['notif'])) { ?>
                             <?php if ($_GET['notif'] == "editkosong") { ?>
                                 <div class="alert alert-danger" role="alert"> Maaf, Nama Website dan Tahun wajib diisi.</div>
