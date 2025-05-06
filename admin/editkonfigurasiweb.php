@@ -121,7 +121,6 @@ $path_logo = "../image/";
 </div>
 
 <?php include("includes/script.php") ?>
-<!-- Script untuk menampilkan nama file di input file bootstrap -->
 <script>
   $(function () {
     bsCustomFileInput.init();
