@@ -1,27 +1,23 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 $id_riwayat_pekerjaan = null;
 $data_pk = null;
 
-// Validasi dan ambil ID dari URL
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $id_riwayat_pekerjaan = (int)$_GET['data'];
 
-    // PERIKSA NAMA TABEL DAN KOLOM DI QUERY INI!
     $sql_get = "SELECT `id_riwayat_pekerjaan`, `tahun`, `posisi`, `perusahaan`
                 FROM `riwayat_pekerjaan` WHERE `id_riwayat_pekerjaan` = ?";
     $stmt_get = mysqli_prepare($koneksi, $sql_get);
     if($stmt_get){
-        mysqli_stmt_bind_param($stmt_get, 'i', $id_riwayat_pekerjaan); // 'i' untuk ID
+        mysqli_stmt_bind_param($stmt_get, 'i', $id_riwayat_pekerjaan);
         mysqli_stmt_execute($stmt_get);
         $result_get = mysqli_stmt_get_result($stmt_get);
         $data_pk = mysqli_fetch_assoc($result_get);
         mysqli_stmt_close($stmt_get);
     } else {
-        // Gagal prepare, mungkin typo di nama tabel/kolom
-        // Log error: error_log("Prepare failed (get pekerjaan): " . mysqli_error($koneksi));
-        header("Location: riwayatpekerjaan.php?notif=editgagal&msg=prepare"); // Redirect dengan error
+        header("Location: riwayatpekerjaan.php?notif=editgagal&msg=prepare");
         exit;
     }
 
