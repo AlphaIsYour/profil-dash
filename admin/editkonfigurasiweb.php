@@ -75,7 +75,6 @@ $path_logo = "../image/";
                         <?php } ?>
                     </div>
 
-                    <!-- Input Hidden untuk ID dan logo lama -->
                     <input type="hidden" name="id_konfigurasi_web" value="<?php echo $id_konfigurasi_web; ?>">
                     <input type="hidden" name="logo_lama" value="<?php echo htmlspecialchars($logo_lama); ?>">
 
@@ -108,13 +107,11 @@ $path_logo = "../image/";
                     </div>
 
                 </div>
-                 <!-- /.card-body -->
                 <div class="card-footer">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan Perubahan</button>
                     </div>
                 </div>
-                <!-- /.card-footer -->
             </form>
             <!-- Form End -->
         </div>
