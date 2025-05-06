@@ -107,18 +107,15 @@ id="email" value="<?php echo $email;?>">
  </div>
  </div>
  </div>
- <!-- /.card-body -->
  <div class="card-footer">
  <div class="col-sm-12">
  <button type="submit" class="btn btn-info float-right">
 <i class="fas fa-save"></i> Simpan</button>
  </div> 
  </div>
- <!-- /.card-footer -->
  </form>
 
     </div>
-    <!-- /.card -->
 
     </section>
     <!-- /.content -->
