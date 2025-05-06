@@ -1,8 +1,6 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
-// Ambil data konfigurasi yang ada untuk di-edit
-// Jika ada ID di URL, gunakan itu. Jika tidak, tetap ambil baris pertama.
 $id_konfigurasi_web_url = isset($_GET['data']) ? filter_var($_GET['data'], FILTER_VALIDATE_INT) : null;
 
 $sql_k = "SELECT `id_konfigurasi_web`, `logo`, `nama_web`, `tahun` FROM `konfigurasi_web`";
