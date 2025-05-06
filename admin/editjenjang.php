@@ -18,7 +18,7 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
         if ($data_get = mysqli_fetch_assoc($result_get)) {
             $jenjang_lama = $data_get['jenjang'];
         } else {
-             header("Location: jenjang.php?notif=datanotfound"); // Data tidak ada
+             header("Location: jenjang.php?notif=datanotfound");
              exit;
         }
         mysqli_stmt_close($stmt_get);
@@ -28,7 +28,7 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     }
 
 } else {
-    header("Location: jenjang.php"); // Redirect jika ID tidak ada/valid
+    header("Location: jenjang.php");
     exit;
 }
 ?>
@@ -44,7 +44,6 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
 <?php include("includes/header.php") ?>
 <?php include("includes/sidebar.php") ?>
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
