@@ -33,9 +33,7 @@ while($data_d = mysqli_fetch_row($query_d)){
 
   <?php include("includes/sidebar.php") ?>
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -49,7 +47,7 @@ while($data_d = mysqli_fetch_row($query_d)){
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
