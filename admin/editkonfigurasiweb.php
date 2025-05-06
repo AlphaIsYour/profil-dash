@@ -5,19 +5,18 @@ $id_konfigurasi_web_url = isset($_GET['data']) ? filter_var($_GET['data'], FILTE
 
 $sql_k = "SELECT `id_konfigurasi_web`, `logo`, `nama_web`, `tahun` FROM `konfigurasi_web`";
 if ($id_konfigurasi_web_url) {
-    $sql_k .= " WHERE `id_konfigurasi_web` = $id_konfigurasi_web_url"; // Langsung pakai ID jika valid
+    $sql_k .= " WHERE `id_konfigurasi_web` = $id_konfigurasi_web_url";
 }
 $sql_k .= " LIMIT 1";
 
 $query_k = mysqli_query($koneksi, $sql_k);
 $data_k = mysqli_fetch_assoc($query_k);
 
-// Data untuk form (handle jika data belum ada)
 $id_konfigurasi_web = $data_k['id_konfigurasi_web'] ?? null;
 $logo_lama = $data_k['logo'] ?? '';
 $nama_web_lama = $data_k['nama_web'] ?? '';
 $tahun_lama = $data_k['tahun'] ?? date('Y');
-$path_logo = "../image/"; // Path ke folder image
+$path_logo = "../image/";
 
 ?>
 <!DOCTYPE html>
