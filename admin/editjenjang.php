@@ -58,10 +58,9 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="card card-info">
             <div class="card-header">
@@ -70,8 +69,6 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                 <a href="jenjang.php" class="btn btn-sm btn-warning float-right"><i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
                 </div>
             </div>
-            <!-- /.card-header -->
-            <!-- form start -->
             </br>
             <div class="col-sm-10 offset-sm-1">
                 <?php if(!empty($_GET['notif'])){?>
@@ -79,11 +76,11 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                     <div class="alert alert-danger" role="alert">
                         Maaf, nama jenjang wajib diisi.
                     </div>
-                     <?php } else if($_GET['notif']=="duplikat"){ // Ganti notif gagal jadi duplikat ?>
+                     <?php } else if($_GET['notif']=="duplikat"){ ?>
                     <div class="alert alert-warning" role="alert">
                         Maaf, nama jenjang tersebut sudah ada.
                     </div>
-                    <?php } else if($_GET['notif']=="editgagal"){ // Notif gagal umum ?>
+                    <?php } else if($_GET['notif']=="editgagal"){ ?>
                     <div class="alert alert-danger" role="alert">
                         Maaf, terjadi kesalahan saat mengubah data.
                     </div>
@@ -92,7 +89,6 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
             </div>
 
             <form class="form-horizontal" method="post" action="konfirmasieditjenjang.php">
-                <!-- Hidden input untuk ID -->
                 <input type="hidden" name="id_master_jenjang" value="<?php echo htmlspecialchars($id_master_jenjang); ?>">
 
                 <div class="card-body">
@@ -103,13 +99,11 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                         </div>
                     </div>
                 </div>
-                <!-- /.card-body -->
                 <div class="card-footer">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
                     </div>
                 </div>
-                <!-- /.card-footer -->
             </form>
         </div>
         <!-- /.card -->
