@@ -113,17 +113,12 @@ $path_logo = "../image/";
                     </div>
                 </div>
             </form>
-            <!-- Form End -->
         </div>
-        <!-- /.card -->
     </section>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
   <?php include("includes/footer.php") ?>
 
 </div>
-<!-- ./wrapper -->
 
 <?php include("includes/script.php") ?>
 <!-- Script untuk menampilkan nama file di input file bootstrap -->
