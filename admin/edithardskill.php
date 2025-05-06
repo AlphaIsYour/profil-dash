@@ -11,26 +11,23 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $stmt_get = mysqli_prepare($koneksi, $sql_get);
 
     if ($stmt_get) {
-        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_hard_skill); // 'i' for integer
+        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_hard_skill);
         mysqli_stmt_execute($stmt_get);
         $result_get = mysqli_stmt_get_result($stmt_get);
 
         if ($data_get = mysqli_fetch_assoc($result_get)) {
             $hardskill_lama = $data_get['hard_skill'];
         } else {
-            // Data tidak ditemukan, redirect dengan notifikasi
-             header("Location: hardskill.php?notif=datanotfound"); // Buat notif ini jika perlu
+             header("Location: hardskill.php?notif=datanotfound");
              exit;
         }
         mysqli_stmt_close($stmt_get);
     } else {
-        // Gagal prepare query
-        echo "Error: Gagal menyiapkan query pengambilan data."; // Atau redirect
+        echo "Error: Gagal menyiapkan query pengambilan data.";
         exit;
     }
 
 } else {
-    // Jika tidak ada ID atau ID tidak valid, redirect ke halaman utama
     header("Location: hardskill.php");
     exit;
 }
