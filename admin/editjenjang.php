@@ -4,16 +4,14 @@ include('../koneksi/koneksi.php');
 $id_master_jenjang = null;
 $jenjang_lama = ''; 
 
-// Validasi dan ambil ID dari URL
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $id_master_jenjang = (int)$_GET['data'];
 
-    // Query ambil data jenjang lama
     $sql_get = "SELECT `jenjang` FROM `master_jenjang` WHERE `id_master_jenjang` = ?";
     $stmt_get = mysqli_prepare($koneksi, $sql_get);
 
     if ($stmt_get) {
-        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_jenjang); // 'i' untuk integer ID
+        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_jenjang);
         mysqli_stmt_execute($stmt_get);
         $result_get = mysqli_stmt_get_result($stmt_get);
 
