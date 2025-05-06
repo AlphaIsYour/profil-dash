@@ -45,7 +45,6 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
 <?php include("includes/sidebar.php") ?>
 
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -54,7 +53,7 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="jenjang.php">Jenjang Pendidikan</a></li> <!-- Link diperbaiki -->
+              <li class="breadcrumb-item"><a href="jenjang.php">Jenjang Pendidikan</a></li>
               <li class="breadcrumb-item active">Edit Jenjang</li>
             </ol>
           </div>
