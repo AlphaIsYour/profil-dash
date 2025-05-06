@@ -1,15 +1,12 @@
 <?php
-// Tidak perlu session_start() jika tidak menggunakan session untuk ID
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 $id_master_hard_skill = null;
-$hardskill_lama = ''; // Default value
+$hardskill_lama = '';
 
-// Cek apakah ada data ID yang dikirim dan valid
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $id_master_hard_skill = (int)$_GET['data'];
 
-    // Query untuk mengambil data hard skill berdasarkan ID menggunakan prepared statement
     $sql_get = "SELECT `hard_skill` FROM `master_hard_skill` WHERE `id_master_hard_skill` = ?";
     $stmt_get = mysqli_prepare($koneksi, $sql_get);
 
