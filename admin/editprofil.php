@@ -118,13 +118,10 @@ id="email" value="<?php echo $email;?>">
     </div>
 
     </section>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
   <?php include("includes/footer.php") ?>
 
 </div>
-<!-- ./wrapper -->
 
 <?php include("includes/script.php") ?>
 </body>
