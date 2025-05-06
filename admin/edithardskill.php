@@ -61,7 +61,6 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
       </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
 
     <div class="card card-info">
@@ -71,10 +70,9 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
           <a href="hardskill.php" class="btn btn-sm btn-warning float-right"><i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
         </div>
       </div>
-      <!-- /.card-header -->
-      <!-- form start -->
+
       </br>
-       <div class="col-sm-10 offset-sm-1"> <!-- Atur posisi notifikasi -->
+       <div class="col-sm-10 offset-sm-1">
           <?php if (!empty($_GET['notif'])) { ?>
             <?php if ($_GET['notif'] == "editkosong") { ?>
               <div class="alert alert-danger" role="alert"> Maaf, data hard skill wajib diisi.</div>
@@ -87,28 +85,23 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
        </div>
 
       <form class="form-horizontal" method="post" action="konfirmasiedithardskill.php">
-        <!-- Hidden input untuk menyimpan ID yang diedit -->
         <input type="hidden" name="id_master_hard_skill" value="<?php echo htmlspecialchars($id_master_hard_skill); ?>">
 
         <div class="card-body">
           <div class="form-group row">
             <label for="hardskill" class="col-sm-3 col-form-label">Hard Skill</label>
             <div class="col-sm-7">
-               <!-- Perbaiki ID dan tambahkan required -->
               <input type="text" class="form-control" id="hardskill" name="hardskill" value="<?php echo htmlspecialchars($hardskill_lama); ?>" required>
             </div>
           </div>
         </div>
-        <!-- /.card-body -->
         <div class="card-footer">
           <div class="col-sm-10">
             <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan Perubahan</button>
           </div>
         </div>
-        <!-- /.card-footer -->
       </form>
     </div>
-    <!-- /.card -->
 
     </section>
     <!-- /.content -->
