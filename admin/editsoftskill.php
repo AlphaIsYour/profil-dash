@@ -58,7 +58,6 @@ if (isset($_GET['data'])) {
       </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
 
     <div class="card card-info">
@@ -68,8 +67,7 @@ if (isset($_GET['data'])) {
           <a href="softskill.php" class="btn btn-sm btn-warning float-right"><i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
         </div>
       </div>
-      <!-- /.card-header -->
-      <!-- form start -->
+
       </br>
       <?php if (!empty($_GET['notif'])) { ?>
         <?php if ($_GET['notif'] == "editkosong") { ?>
