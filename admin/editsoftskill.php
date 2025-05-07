@@ -1,5 +1,5 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path jika perlu
+include('../koneksi/koneksi.php');
 
 // Cek apakah ada data ID yang dikirim
 if (isset($_GET['data'])) {

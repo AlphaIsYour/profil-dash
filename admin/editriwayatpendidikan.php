@@ -143,9 +143,9 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
             </form>
         </div> 
     </section>
-  </div> <!-- /.content-wrapper -->
+  </div> 
   <?php include("includes/footer.php") ?>
-</div> <!-- ./wrapper -->
+</div>
 
 <?php include("includes/script.php") ?>
 <script src="plugins/select2/js/select2.full.min.js"></script>
