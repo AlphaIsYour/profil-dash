@@ -68,8 +68,6 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                 <i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
                 </div>
             </div>
-            <!-- /.card-header -->
-             <!-- form start -->
             </br>
              <div class="col-sm-10 offset-sm-1">
                 <?php if (!empty($_GET['notif'])) { ?>
