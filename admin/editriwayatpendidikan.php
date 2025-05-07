@@ -1,10 +1,9 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 $id_riwayat_pendidikan = null;
-$data_rp = null; // Untuk menyimpan data riwayat yang akan diedit
+$data_rp = null;
 
-// Validasi dan ambil ID dari URL
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $id_riwayat_pendidikan = (int)$_GET['data'];
 
