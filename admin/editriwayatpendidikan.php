@@ -29,11 +29,9 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
 }
 
 
-// Ambil data master jenjang untuk dropdown
 $sql_jenjang = "SELECT `id_master_jenjang`, `jenjang` FROM `master_jenjang` ORDER BY `jenjang`";
 $query_jenjang = mysqli_query($koneksi, $sql_jenjang);
 
-// Ambil data master universitas untuk dropdown
 $sql_univ = "SELECT `id_master_universitas`, `nama_universitas` FROM `master_universitas` ORDER BY `nama_universitas`";
 $query_univ = mysqli_query($koneksi, $sql_univ);
 
