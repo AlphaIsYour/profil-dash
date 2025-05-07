@@ -100,12 +100,12 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                         <input type="text" class="form-control" name="perusahaan" id="perusahaan" value="<?php echo htmlspecialchars($data_pk['perusahaan']); ?>" required>
                         </div>
                     </div>
-                </div> <!-- /.card-body -->
+                </div>
                 <div class="card-footer">
                      <div class="col-sm-10">
                         <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
                     </div>
-                </div> <!-- /.card-footer -->
+                </div>
             </form>
         </div> <!-- /.card -->
     </section> <!-- /.content -->
