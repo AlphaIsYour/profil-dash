@@ -63,10 +63,9 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="card card-info">
             <div class="card-header">
@@ -76,8 +75,7 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
                 <i class="fas fa-arrow-alt-circle-left"></i> Kembali</a>
                 </div>
             </div>
-            <!-- /.card-header -->
-             <!-- form start -->
+
             </br>
              <div class="col-sm-10 offset-sm-1">
                 <?php if (!empty($_GET['notif'])) { ?>
