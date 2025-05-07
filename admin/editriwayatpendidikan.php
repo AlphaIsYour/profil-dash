@@ -87,7 +87,6 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
                 <?php } ?>
             </div>
             <form class="form-horizontal" method="post" action="konfirmasieditriwayatpendidikan.php">
-                <!-- Hidden input for ID -->
                 <input type="hidden" name="id_riwayat_pendidikan" value="<?php echo $id_riwayat_pendidikan; ?>">
 
                 <div class="card-body">
@@ -135,7 +134,7 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
                         </select>
                         </div>
                     </div>
-                </div> <!-- /.card-body -->
+                </div>
                 <div class="card-footer">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
