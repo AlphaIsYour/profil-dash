@@ -79,14 +79,12 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                 <?php } ?>
             </div>
             <form class="form-horizontal" method="post" action="konfirmasieditriwayatpekerjaan.php">
-                <!-- Hidden input for ID -->
                 <input type="hidden" name="id_riwayat_pekerjaan" value="<?php echo $id_riwayat_pekerjaan; ?>">
 
                 <div class="card-body">
                     <div class="form-group row">
                         <label for="tahun" class="col-sm-3 col-form-label">Tahun <span class="text-danger">*</span></label>
                         <div class="col-sm-7">
-                        <!-- Pastikan nama kolom benar -->
                         <input type="text" class="form-control" name="tahun" id="tahun" value="<?php echo htmlspecialchars($data_pk['tahun']); ?>" placeholder="Contoh: 2021-2023" required>
                         </div>
                     </div>
