@@ -42,9 +42,7 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
 <?php include("includes/header.php") ?>
 <?php include("includes/sidebar.php") ?>
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
