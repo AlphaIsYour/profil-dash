@@ -91,14 +91,12 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                     <div class="form-group row">
                         <label for="posisi" class="col-sm-3 col-form-label">Posisi <span class="text-danger">*</span></label>
                         <div class="col-sm-7">
-                         <!-- Pastikan nama kolom benar -->
                         <input type="text" class="form-control" name="posisi" id="posisi" value="<?php echo htmlspecialchars($data_pk['posisi']); ?>" required>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="perusahaan" class="col-sm-3 col-form-label">Perusahaan <span class="text-danger">*</span></label>
                         <div class="col-sm-7">
-                         <!-- Pastikan nama kolom benar -->
                         <input type="text" class="form-control" name="perusahaan" id="perusahaan" value="<?php echo htmlspecialchars($data_pk['perusahaan']); ?>" required>
                         </div>
                     </div>
