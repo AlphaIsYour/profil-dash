@@ -24,8 +24,7 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     }
 
 } else {
-    // Jika ID tidak valid atau tidak ada
-    header("Location: riwayatpendidikan.php?notif=invalidid"); // Buat notif ini jika perlu
+    header("Location: riwayatpendidikan.php?notif=invalidid");
     exit;
 }
 
