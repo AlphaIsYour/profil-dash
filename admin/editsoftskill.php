@@ -18,7 +18,6 @@ if (isset($_GET['data'])) {
         } else {
             echo "Error: Data soft skill tidak ditemukan.";
             exit;
-            // atau header("Location: softskill.php?notif=datanotfound"); exit;
         }
         mysqli_stmt_close($stmt_get);
     } else {
@@ -27,7 +26,6 @@ if (isset($_GET['data'])) {
     }
 
 } else {
-    // Jika tidak ada ID, redirect ke halaman utama
     header("Location: softskill.php");
     exit;
 }
