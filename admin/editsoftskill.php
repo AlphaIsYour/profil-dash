@@ -41,9 +41,7 @@ if (isset($_GET['data'])) {
 <?php include("includes/header.php") ?>
 <?php include("includes/sidebar.php") ?>
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -57,7 +55,7 @@ if (isset($_GET['data'])) {
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
