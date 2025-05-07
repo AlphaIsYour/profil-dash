@@ -109,9 +109,9 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
             </form>
         </div>
     </section>
-  </div> <!-- /.content-wrapper -->
+  </div>
   <?php include("includes/footer.php") ?>
-</div> <!-- ./wrapper -->
+</div> 
 <?php include("includes/script.php") ?>
 </body>
 </html>
