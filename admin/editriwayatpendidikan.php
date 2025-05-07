@@ -139,10 +139,10 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-info float-right"><i class="fas fa-save"></i> Simpan</button>
                     </div>
-                </div> <!-- /.card-footer -->
+                </div>
             </form>
-        </div> <!-- /.card -->
-    </section> <!-- /.content -->
+        </div> 
+    </section>
   </div> <!-- /.content-wrapper -->
   <?php include("includes/footer.php") ?>
 </div> <!-- ./wrapper -->
