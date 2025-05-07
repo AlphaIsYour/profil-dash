@@ -7,7 +7,6 @@ $data_rp = null;
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $id_riwayat_pendidikan = (int)$_GET['data'];
 
-    // Query untuk mengambil data riwayat yang akan diedit
     $sql_get = "SELECT `id_riwayat_pendidikan`, `tahun`, `id_master_jenjang`, `jurusan`, `id_master_universitas`
                 FROM `riwayat_pendidikan` WHERE `id_riwayat_pendidikan` = ?";
     $stmt_get = mysqli_prepare($koneksi, $sql_get);
@@ -19,9 +18,8 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
         mysqli_stmt_close($stmt_get);
     }
 
-    // Jika data tidak ditemukan, redirect
     if (!$data_rp) {
-        header("Location: riwayatpendidikan.php?notif=datanotfound"); // Buat notif ini jika perlu
+        header("Location: riwayatpendidikan.php?notif=datanotfound"); 
         exit;
     }
 
