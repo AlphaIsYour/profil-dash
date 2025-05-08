@@ -13,14 +13,11 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
         mysqli_begin_transaction($koneksi);
 
         try {
-            // 1. Hapus dari tabel penghubung (hard_skill) - OPSIONAL jika tabel ini ada
-            // Jika tabel hard_skill tidak relevan untuk penghapusan master, comment/hapus bagian ini
             $sql_dh_detail = "DELETE FROM `hard_skill` WHERE `id_master_hard_skill` = ?";
             $stmt_detail = mysqli_prepare($koneksi, $sql_dh_detail);
-            mysqli_stmt_bind_param($stmt_detail, 'i', $id_master_hard_skill); // 'i' for integer
+            mysqli_stmt_bind_param($stmt_detail, 'i', $id_master_hard_skill);
             mysqli_stmt_execute($stmt_detail);
             mysqli_stmt_close($stmt_detail);
-            // Akhir bagian opsional
 
             // 2. Hapus dari tabel master (master_hard_skill)
             $sql_dh_master = "DELETE FROM `master_hard_skill` WHERE `id_master_hard_skill` = ?";
