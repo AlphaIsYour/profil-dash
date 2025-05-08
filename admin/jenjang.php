@@ -1,5 +1,5 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
@@ -31,7 +31,6 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     }
 }
 
-// --- Logic Search & Pagination ---
 $search_query = "";
 if (isset($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
@@ -56,12 +55,11 @@ $start = ($page - 1) * $limit;
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fas fa-layer-group"></i> Jenjang Pendidikan</h3> <!-- Icon ganti -->
+            <h3><i class="fas fa-layer-group"></i> Jenjang Pendidikan</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -69,7 +67,7 @@ $start = ($page - 1) * $limit;
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
