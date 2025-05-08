@@ -188,7 +188,6 @@ $start = ($page - 1) * $limit;
                 <ul class="pagination pagination-sm m-0 float-right">
                   <?php
                   $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
-                  // Logika Pagination (copy dari sebelumnya)
                   if ($page > 1) { echo "<li class='page-item'><a class='page-link' href='jenjang.php?page=1{$query_string}'>« First</a></li>"; echo "<li class='page-item'><a class='page-link' href='jenjang.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>"; } else { echo "<li class='page-item disabled'><span class='page-link'>« First</span></li>"; echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>"; }
                   $num_links = 2; $start_loop = max(1, $page - $num_links); $end_loop = min($total_pages, $page + $num_links);
                   if ($start_loop > 1) { echo "<li class='page-item'><a class='page-link' href='jenjang.php?page=1{$query_string}'>1</a></li>"; if ($start_loop > 2) { echo "<li class='page-item disabled'><span class='page-link'>...</span></li>"; } }
@@ -215,7 +214,6 @@ $start = ($page - 1) * $limit;
 <script>
 function konfirmasiHapusJenjang(nama, id, katakunci, page) {
   let pesanKonfirmasi = `Anda yakin ingin menghapus jenjang: ${nama}?`;
-  // pesanKonfirmasi += "\n\nCATATAN: Jika jenjang ini masih digunakan dalam riwayat pendidikan, penghapusan mungkin gagal.";
   if (confirm(pesanKonfirmasi)) {
     window.location.href = `jenjang.php?aksi=hapus&data=${id}&katakunci=${encodeURIComponent(katakunci)}&page=${page}`;
   }
