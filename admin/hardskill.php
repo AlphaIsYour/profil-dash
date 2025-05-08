@@ -175,7 +175,6 @@ $start = ($page - 1) * $limit;
 
                         $stmt_data = mysqli_prepare($koneksi, $sql_data);
                         if ($stmt_data) {
-                             // Bind parameter hanya jika ada parameter
                             if (!empty($params_data)) {
                                mysqli_stmt_bind_param($stmt_data, $types_data, ...$params_data);
                             }
@@ -186,7 +185,7 @@ $start = ($page - 1) * $limit;
                             if (mysqli_num_rows($result_data) > 0) {
                                 while ($data_u = mysqli_fetch_assoc($result_data)) {
                                     $id_master_hard_skill = $data_u['id_master_hard_skill'];
-                                    $hard_skill_nama = $data_u['hard_skill']; // Ganti nama variabel
+                                    $hard_skill_nama = $data_u['hard_skill'];
                             ?>
                     <tr>
                       <td class="text-center"><?php echo $no; ?></td>
@@ -205,7 +204,7 @@ $start = ($page - 1) * $limit;
                             } else {
                                 echo "<tr><td colspan='3' class='text-center'>Data tidak ditemukan</td></tr>";
                             }
-                             mysqli_stmt_close($stmt_data); // Tutup statement data
+                             mysqli_stmt_close($stmt_data);
                         } else {
                              echo "<tr><td colspan='3' class='text-center text-danger'>Error mengambil data.</td></tr>";
                         }
@@ -215,7 +214,7 @@ $start = ($page - 1) * $limit;
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
-                <?php if ($total_records > 0) : // Tampilkan pagination hanya jika ada data ?>
+                <?php if ($total_records > 0) :?>
                 <ul class="pagination pagination-sm m-0 float-right">
                   <?php
                   $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
