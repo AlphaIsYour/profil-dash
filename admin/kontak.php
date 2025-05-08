@@ -1,7 +1,6 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
-// --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
         // Validasi ID
@@ -10,8 +9,6 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
              exit;
         }
         $id_kontak = (int)$_GET['data'];
-
-        // Hapus data kontak
         $sql_delete = "DELETE FROM `kontak` WHERE `id_kontak` = ?";
         $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
 
@@ -22,25 +19,22 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
             if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
                 header("Location: kontak.php?notif=hapusberhasil");
             } else {
-                // ID tidak ditemukan atau error lain
                 header("Location: kontak.php?notif=hapusgagal&msg=notfound");
             }
             mysqli_stmt_close($stmt_delete);
         } else {
-            // Gagal prepare
             header("Location: kontak.php?notif=hapusgagal&msg=prepare");
         }
         exit;
     }
 }
 
-// --- Logic Search & Pagination ---
 $search_query = "";
 if (isset($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
 }
 
-$limit = 10; // Jumlah data per halaman
+$limit = 10;
 $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]) : 1;
 if ($page === false) $page = 1;
 $start = ($page - 1) * $limit;
@@ -63,7 +57,7 @@ $start = ($page - 1) * $limit;
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fas fa-envelope"></i> Kontak Masuk</h3> <!-- Icon ganti -->
+            <h3><i class="fas fa-envelope"></i> Kontak Masuk</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -85,10 +79,9 @@ $start = ($page - 1) * $limit;
               </div>
               <div class="card-body">
               <div class="col-md-12">
-                  <form method="GET" action="kontak.php"> <!-- Method GET -->
+                  <form method="GET" action="kontak.php">
                     <div class="row">
                         <div class="col-md-4 mb-2">
-                           <!-- Name katakunci -->
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari Nama/Email/Pesan..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 mb-2">
@@ -105,7 +98,6 @@ $start = ($page - 1) * $limit;
                       <div class="alert alert-danger alert-dismissible fade show" role="alert"> Data Gagal Dihapus <?php echo (isset($_GET['msg']) && $_GET['msg'] == 'notfound') ? '(Data tidak ditemukan)' : ''; ?> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                       <?php } ?>
                   <?php } ?>
-                  <!-- Notif tambah/edit dihapus karena tidak relevan -->
               </div>
               <div class="table-responsive">
                 <table class="table table-bordered table-striped">

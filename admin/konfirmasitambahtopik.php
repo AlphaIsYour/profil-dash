@@ -3,13 +3,11 @@ include('../koneksi/koneksi.php');
 
 $topik = isset($_POST['topik']) ? trim($_POST['topik']) : '';
 
-// 1. Validasi: Cek apakah input kosong
 if (empty($topik)) {
     header("Location: tambahtopik.php?notif=tambahkosong");
     exit;
 }
 
-// 2. Validasi: Cek apakah nama topik sudah ada
 $sql_check = "SELECT `id_master_topik` FROM `master_topik` WHERE `topik` = ?";
 $stmt_check = mysqli_prepare($koneksi, $sql_check);
 
@@ -29,7 +27,6 @@ if (mysqli_stmt_num_rows($stmt_check) > 0) {
 }
 mysqli_stmt_close($stmt_check);
 
-// 3. Insert data baru ke master_topik
 $sql_insert = "INSERT INTO `master_topik` (`topik`) VALUES (?)";
 $stmt_insert = mysqli_prepare($koneksi, $sql_insert);
 
