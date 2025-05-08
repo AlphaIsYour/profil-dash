@@ -28,7 +28,7 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     }
 
 } else {
-    header("Location: universitas.php"); // Redirect jika ID tidak ada/valid
+    header("Location: universitas.php");
     exit;
 }
 ?>
@@ -81,11 +81,11 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
                     <div class="alert alert-danger" role="alert">
                         Maaf, nama universitas wajib diisi.
                     </div>
-                    <?php } else if($_GET['notif']=="duplikat"){ // Ganti notif gagal jadi duplikat ?>
+                    <?php } else if($_GET['notif']=="duplikat"){ ?>
                     <div class="alert alert-warning" role="alert">
                         Maaf, nama universitas tersebut sudah ada.
                     </div>
-                     <?php } else if($_GET['notif']=="editgagal"){ // Notif gagal umum ?>
+                     <?php } else if($_GET['notif']=="editgagal"){  ?>
                     <div class="alert alert-danger" role="alert">
                        Maaf, terjadi kesalahan saat mengubah data.
                     </div>
