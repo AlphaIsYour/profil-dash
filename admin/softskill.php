@@ -60,7 +60,7 @@ $start = ($page - 1) * $limit;
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fas fa-puzzle-piece"></i> Soft Skill</h3> <!-- Icon diganti agar lebih relevan -->
+            <h3><i class="fas fa-puzzle-piece"></i> Soft Skill</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -68,7 +68,7 @@ $start = ($page - 1) * $limit;
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -85,10 +85,10 @@ $start = ($page - 1) * $limit;
               <div class="col-md-12">
               <form method="GET" action="softskill.php">
                     <div class="row">
-                        <div class="col-md-4 mb-2"> <!-- mb-2 untuk margin bawah -->
+                        <div class="col-md-4 mb-2">
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari soft skill..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
-                        <div class="col-md-5 mb-2"> <!-- mb-2 -->
+                        <div class="col-md-5 mb-2">
                           <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>  Cari</button>
                         </div>
                     </div><!-- .row -->
@@ -102,14 +102,14 @@ $start = ($page - 1) * $limit;
                     <div class="alert alert-success" role="alert"> Data Berhasil Diubah</div>
                     <?php } else if ($_GET['notif'] == "hapusberhasil") { ?>
                     <div class="alert alert-success" role="alert"> Data Berhasil Dihapus</div>
-                    <?php } else if ($_GET['notif'] == "hapusgagal") { ?> <!-- Tambahan notif gagal -->
+                    <?php } else if ($_GET['notif'] == "hapusgagal") { ?>
                     <div class="alert alert-danger" role="alert"> Data Gagal Dihapus</div>
                     <?php } ?>
                 <?php } ?>
               </div>
 
-              <div class="table-responsive"> <!-- Tambahkan wrapper untuk responsivitas tabel -->
-                <table class="table table-bordered table-striped"> <!-- Tambah class table-striped -->
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
                       <th width="5%">No</th>
@@ -119,14 +119,13 @@ $start = ($page - 1) * $limit;
                   </thead>
                   <tbody>
                   <?php
-                        // Count total records for pagination
                         $count_sql = "SELECT COUNT(*) as total FROM `master_soft_skill`";
                         $params_count = [];
                         $types_count = '';
                         if (!empty($search_query)) {
                             $count_sql .= " WHERE `soft_skill` LIKE ?";
                             $search_param = "%" . $search_query . "%";
-                            $params_count[] = &$search_param; // Pass by reference
+                            $params_count[] = &$search_param;
                             $types_count .= 's';
                         }
 
@@ -141,8 +140,6 @@ $start = ($page - 1) * $limit;
                         $total_pages = ceil($total_records / $limit);
                         mysqli_stmt_close($stmt_count);
 
-
-                        // Main query for fetching softskill
                         $sql_u = "SELECT `id_master_soft_skill`, `soft_skill` FROM `master_soft_skill`";
                         $params_data = [];
                         $types_data = '';
@@ -150,21 +147,19 @@ $start = ($page - 1) * $limit;
                         if (!empty($search_query)) {
                             $sql_u .= " WHERE `soft_skill` LIKE ?";
                             $search_param_data = "%" . $search_query . "%";
-                            $params_data[] = &$search_param_data; // Pass by reference
+                            $params_data[] = &$search_param_data;
                             $types_data .= 's';
                         }
                         $sql_u .= " ORDER BY `soft_skill` LIMIT ?, ?";
-                        $params_data[] = &$start;  // Pass by reference
-                        $params_data[] = &$limit;  // Pass by reference
+                        $params_data[] = &$start;
+                        $params_data[] = &$limit;
                         $types_data .= 'ii';
 
                         $stmt_data = mysqli_prepare($koneksi, $sql_u);
-                        // Periksa apakah statement berhasil diprepare
                          if ($stmt_data === false) {
-                            die("Error preparing statement: " . mysqli_error($koneksi)); // Tampilkan error jika gagal prepare
+                            die("Error preparing statement: " . mysqli_error($koneksi));
                         }
 
-                        // Bind parameter hanya jika ada parameter
                         if (!empty($params_data)) {
                            mysqli_stmt_bind_param($stmt_data, $types_data, ...$params_data);
                         }
@@ -176,7 +171,7 @@ $start = ($page - 1) * $limit;
                         if (mysqli_num_rows($result_data) > 0) {
                             while ($data_u = mysqli_fetch_assoc($result_data)) {
                                 $id_master_soft_skill = $data_u['id_master_soft_skill'];
-                                $soft_skill_nama = $data_u['soft_skill']; // Ganti nama variabel agar tidak bentrok
+                                $soft_skill_nama = $data_u['soft_skill'];
                         ?>
                     <tr>
                       <td><?php echo $no; ?></td>
@@ -187,7 +182,6 @@ $start = ($page - 1) * $limit;
                            onclick="if(confirm('Anda yakin ingin menghapus data: <?php echo htmlspecialchars(addslashes($soft_skill_nama)); ?>? Data terkait di tabel lain (jika ada) juga akan dihapus.')) window.location.href = 'softskill.php?aksi=hapus&data=<?php echo htmlspecialchars($id_master_soft_skill); ?>&katakunci=<?php echo urlencode($search_query); ?>&page=<?php echo $page; ?>'">
                            <i class="fas fa-trash"></i>
                         </a>
-                        <!-- Tambahkan katakunci dan page ke URL hapus agar kembali ke halaman/filter yang sama -->
                       </td>
                     </tr>
                     <?php
@@ -200,7 +194,7 @@ $start = ($page - 1) * $limit;
                         </tr>
                         <?php
                         }
-                        mysqli_stmt_close($stmt_data); // Tutup statement data
+                        mysqli_stmt_close($stmt_data);
                         ?>
                   </tbody>
                 </table>
@@ -211,7 +205,6 @@ $start = ($page - 1) * $limit;
                   <?php
                   $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
 
-                  // Tombol First dan Previous
                   if ($page > 1) {
                       echo "<li class='page-item'><a class='page-link' href='softskill.php?page=1{$query_string}'>« First</a></li>";
                       echo "<li class='page-item'><a class='page-link' href='softskill.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>";
@@ -220,8 +213,7 @@ $start = ($page - 1) * $limit;
                       echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>";
                   }
 
-                  // Nomor Halaman
-                  $num_links = 3; // Jumlah link nomor halaman di sekitar halaman aktif
+                  $num_links = 3;
                   $start_loop = max(1, $page - $num_links);
                   $end_loop = min($total_pages, $page + $num_links);
 
