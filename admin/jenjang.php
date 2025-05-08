@@ -84,13 +84,13 @@ $start = ($page - 1) * $limit;
               <div class="col-md-12">
               <form method="GET" action="jenjang.php">
                     <div class="row">
-                        <div class="col-md-4 mb-2"> <!-- mb-2 -->
+                        <div class="col-md-4 mb-2">
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari jenjang..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 mb-2">
                           <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>  Cari</button>
                         </div>
-                    </div><!-- .row -->
+                    </div>
                   </form>
                 </div><br>
                 <div class="col-sm-12">
@@ -119,7 +119,6 @@ $start = ($page - 1) * $limit;
                     </thead>
                     <tbody>
                         <?php
-                            // Count total records
                             $count_sql = "SELECT COUNT(*) as total FROM `master_jenjang`";
                             $params_count = []; $types_count = '';
                             if (!empty($search_query)) {
@@ -141,8 +140,6 @@ $start = ($page - 1) * $limit;
                                 } else { echo "<tr><td colspan='3' class='text-center text-danger'>Error mendapatkan hasil count.</td></tr>"; }
                                 mysqli_stmt_close($stmt_count);
                             } else { echo "<tr><td colspan='3' class='text-center text-danger'>Error menghitung data jenjang.</td></tr>"; }
-
-                            // Main query
                             $sql_data = "SELECT `id_master_jenjang`, `jenjang` FROM `master_jenjang`";
                             $params_data = []; $types_data = '';
                             if (!empty($search_query)) {
