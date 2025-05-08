@@ -158,8 +158,6 @@ $start = ($page - 1) * $limit;
                             echo "<tr><td colspan='3' class='text-center text-danger'>Error menghitung data.</td></tr>";
                         }
 
-
-                        // Main query for fetching hardskill with prepared statement
                         $sql_data = "SELECT `id_master_hard_skill`, `hard_skill` FROM `master_hard_skill`";
                         $params_data = [];
                         $types_data = '';
@@ -167,12 +165,12 @@ $start = ($page - 1) * $limit;
                         if (!empty($search_query)) {
                             $sql_data .= " WHERE `hard_skill` LIKE ?";
                             $search_param_data = "%" . $search_query . "%";
-                            $params_data[] = &$search_param_data; // Pass by reference
+                            $params_data[] = &$search_param_data;
                             $types_data .= 's';
                         }
                         $sql_data .= " ORDER BY `hard_skill` LIMIT ?, ?";
-                        $params_data[] = &$start;  // Pass by reference
-                        $params_data[] = &$limit;  // Pass by reference
+                        $params_data[] = &$start;
+                        $params_data[] = &$limit;
                         $types_data .= 'ii';
 
                         $stmt_data = mysqli_prepare($koneksi, $sql_data);
