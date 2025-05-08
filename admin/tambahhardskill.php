@@ -1,7 +1,3 @@
-<?php
-// Jika perlu, tambahkan include koneksi atau session start di sini
-// include('../koneksi/koneksi.php');
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +25,7 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -45,7 +41,7 @@
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <div class="col-sm-10 offset-sm-1"> <!-- Atur posisi notifikasi -->
+      <div class="col-sm-10 offset-sm-1">>
           <?php if (!empty($_GET['notif'])) { ?>
               <?php if ($_GET['notif'] == "tambahkosong") { ?>
                   <div class="alert alert-danger" role="alert"> Maaf, data hard skill wajib diisi.</div>

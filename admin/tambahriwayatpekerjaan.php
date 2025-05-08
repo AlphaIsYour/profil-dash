@@ -20,12 +20,12 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="riwayatpekerjaan.php">Riwayat Pekerjaan</a></li> <!-- Link diperbaiki -->
+              <li class="breadcrumb-item"><a href="riwayatpekerjaan.php">Riwayat Pekerjaan</a></li>
               <li class="breadcrumb-item active">Tambah</li>
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -50,7 +50,7 @@
                     <?php } ?>
                 <?php } ?>
             </div>
-            <form class="form-horizontal" method="post" action="konfirmasitambahriwayatpekerjaan.php"> <!-- Action ke file konfirmasi -->
+            <form class="form-horizontal" method="post" action="konfirmasitambahriwayatpekerjaan.php">
                 <div class="card-body">
                     <div class="form-group row">
                         <label for="tahun" class="col-sm-3 col-form-label">Tahun <span class="text-danger">*</span></label>
@@ -70,16 +70,16 @@
                         <input type="text" class="form-control" name="perusahaan" id="perusahaan" value="" required>
                         </div>
                     </div>
-                </div> <!-- /.card-body -->
+                </div> 
                 <div class="card-footer">
-                    <div class="col-sm-10"> <!-- Disesuaikan col-sm-10 agar align -->
+                    <div class="col-sm-10"> 
                         <button type="submit" class="btn btn-info float-right"><i class="fas fa-plus"></i> Tambah</button>
                     </div>
-                </div> <!-- /.card-footer -->
+                </div> 
             </form>
-        </div> <!-- /.card -->
-    </section> <!-- /.content -->
-  </div> <!-- /.content-wrapper -->
+        </div>
+    </section>
+  </div>
   <?php include("includes/footer.php") ?>
 </div> <!-- ./wrapper -->
 <?php include("includes/script.php") ?>

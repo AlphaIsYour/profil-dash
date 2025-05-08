@@ -1,6 +1,3 @@
-<?php
-// include('../koneksi/koneksi.php'); // Jika perlu
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,11 +46,11 @@
                     <div class="alert alert-danger" role="alert">
                         Maaf, nama jenjang wajib diisi.
                     </div>
-                     <?php } else if($_GET['notif']=="duplikat"){ // Ganti notif gagal jadi duplikat ?>
+                     <?php } else if($_GET['notif']=="duplikat"){ ?>
                     <div class="alert alert-warning" role="alert">
                         Maaf, nama jenjang tersebut sudah ada.
                     </div>
-                    <?php } else if($_GET['notif']=="tambahgagal"){ // Notif gagal umum ?>
+                    <?php } else if($_GET['notif']=="tambahgagal"){ ?>
                     <div class="alert alert-danger" role="alert">
                         Maaf, terjadi kesalahan saat menyimpan data.
                     </div>
