@@ -131,14 +131,13 @@ $start = ($page - 1) * $limit;
                   </thead>
                   <tbody>
                   <?php
-                        // Count total records for pagination with prepared statement
                         $count_sql = "SELECT COUNT(*) as total FROM `master_hard_skill`";
                         $params_count = [];
                         $types_count = '';
                         if (!empty($search_query)) {
                             $count_sql .= " WHERE `hard_skill` LIKE ?";
                             $search_param_count = "%" . $search_query . "%";
-                            $params_count[] = &$search_param_count; // Pass by reference
+                            $params_count[] = &$search_param_count;
                             $types_count .= 's';
                         }
 
@@ -154,7 +153,6 @@ $start = ($page - 1) * $limit;
                             $total_pages = ceil($total_records / $limit);
                             mysqli_stmt_close($stmt_count);
                         } else {
-                            // Fallback jika prepare gagal
                             $total_records = 0;
                             $total_pages = 0;
                             echo "<tr><td colspan='3' class='text-center text-danger'>Error menghitung data.</td></tr>";
