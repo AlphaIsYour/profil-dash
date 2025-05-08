@@ -19,13 +19,11 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
             mysqli_stmt_execute($stmt_detail);
             mysqli_stmt_close($stmt_detail);
 
-            // 2. Hapus dari tabel master (master_hard_skill)
             $sql_dh_master = "DELETE FROM `master_hard_skill` WHERE `id_master_hard_skill` = ?";
             $stmt_master = mysqli_prepare($koneksi, $sql_dh_master);
-            mysqli_stmt_bind_param($stmt_master, 'i', $id_master_hard_skill); // 'i' for integer
+            mysqli_stmt_bind_param($stmt_master, 'i', $id_master_hard_skill); 
             mysqli_stmt_execute($stmt_master);
 
-             // Cek apakah ada baris yang terhapus di master
             if (mysqli_stmt_affected_rows($stmt_master) > 0) {
                 mysqli_commit($koneksi); // Commit jika berhasil
                 header("Location: hardskill.php?notif=hapusberhasil");
