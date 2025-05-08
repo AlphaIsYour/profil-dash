@@ -8,7 +8,6 @@ $jenjang = isset($_POST['jenjang']) ? trim($_POST['jenjang']) : '';
 
 $redirect_url = "editjenjang.php?data=" . urlencode($id_master_jenjang);
 
-// 1. Validasi dasar
 if (empty($id_master_jenjang)) {
     header("Location: jenjang.php?notif=editgagal&msg=invalidid");
     exit;
@@ -18,7 +17,6 @@ if (empty($jenjang)) {
     exit;
 }
 
-// 2. Validasi: Cek duplikasi nama baru (untuk ID yang BERBEDA)
 $sql_check = "SELECT `id_master_jenjang` FROM `master_jenjang`
               WHERE `jenjang` = ? AND `id_master_jenjang` != ?";
 $stmt_check = mysqli_prepare($koneksi, $sql_check);
@@ -39,7 +37,6 @@ if (mysqli_stmt_num_rows($stmt_check) > 0) {
 }
 mysqli_stmt_close($stmt_check);
 
-// 3. Update data di database
 $sql_update = "UPDATE `master_jenjang` SET `jenjang` = ?
                WHERE `id_master_jenjang` = ?";
 $stmt_update = mysqli_prepare($koneksi, $sql_update);

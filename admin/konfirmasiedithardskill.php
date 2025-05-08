@@ -8,7 +8,6 @@ $hardskill_baru = isset($_POST['hardskill']) ? trim($_POST['hardskill']) : '';
 
 $redirect_url = "edithardskill.php?data=" . urlencode($id_master_hard_skill);
 
-// 1. Validasi dasar
 if (empty($id_master_hard_skill)) {
     header("Location: hardskill.php?notif=editgagal&msg=invalidid");
     exit;
@@ -18,8 +17,6 @@ if (empty($hardskill_baru)) {
     exit;
 }
 
-
-// 2. Validasi: Cek duplikasi nama baru (untuk ID yang BERBEDA)
 $sql_check = "SELECT `id_master_hard_skill` FROM `master_hard_skill` WHERE `hard_skill` = ? AND `id_master_hard_skill` != ?";
 $stmt_check = mysqli_prepare($koneksi, $sql_check);
 
@@ -28,7 +25,7 @@ if ($stmt_check === false) {
     exit;
 }
 
-mysqli_stmt_bind_param($stmt_check, 'si', $hardskill_baru, $id_master_hard_skill); // 's' for hardskill baru, 'i' for ID
+mysqli_stmt_bind_param($stmt_check, 'si', $hardskill_baru, $id_master_hard_skill); 
 mysqli_stmt_execute($stmt_check);
 mysqli_stmt_store_result($stmt_check);
 
@@ -39,7 +36,6 @@ if (mysqli_stmt_num_rows($stmt_check) > 0) {
 }
 mysqli_stmt_close($stmt_check);
 
-// 3. Update data di database
 $sql_update = "UPDATE `master_hard_skill` SET `hard_skill` = ? WHERE `id_master_hard_skill` = ?";
 $stmt_update = mysqli_prepare($koneksi, $sql_update);
 

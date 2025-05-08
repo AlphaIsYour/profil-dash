@@ -25,12 +25,11 @@ $path_logo = "../images/";
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fas fa-cog"></i> Konfigurasi Website</h3> <!-- Icon ganti -->
+            <h3><i class="fas fa-cog"></i> Konfigurasi Website</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -74,7 +73,7 @@ $path_logo = "../images/";
                         <td width="20%"><strong>Logo</strong></td>
                         <td width="80%">
                           <?php if (!empty($logo) && file_exists($path_logo . $logo)) : ?>
-                            <img src="<?php echo $path_logo . htmlspecialchars($logo); ?>" class="img-fluid" width="200px;"> <!-- Ukuran disesuaikan -->
+                            <img src="<?php echo $path_logo . htmlspecialchars($logo); ?>" class="img-fluid" width="200px;">
                           <?php else : ?>
                             <span class="text-muted">Logo belum diatur atau file tidak ditemukan.</span>
                           <?php endif; ?>
