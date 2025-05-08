@@ -1,7 +1,6 @@
 <?php
 include('../koneksi/koneksi.php');
 
-// --- Konfigurasi Upload ---
 $target_dir = "../images/";
 $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
 $max_file_size = 2 * 1024 * 1024;
@@ -25,23 +24,19 @@ if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0 && $_FILES['logo']['
     $file_size = $_FILES['logo']['size'];
     $file_ext = strtolower(pathinfo($file_name_original, PATHINFO_EXTENSION));
 
-    // 1. Validasi Tipe File
     if (!in_array($file_ext, $allowed_types)) {
         header("Location: editkonfigurasiweb.php?data=" . $id_konfigurasi_web . "¬if=tipegagal");
         exit;
     }
 
-    // 2. Validasi Ukuran File
     if ($file_size > $max_file_size) {
          header("Location: editkonfigurasiweb.php?data=" . $id_konfigurasi_web . "¬if=sizefail");
          exit;
     }
 
-    // 3. Buat Nama File Unik (contoh: logo_timestamp.ext)
     $nama_file_logo_baru = "logo_" . time() . "." . $file_ext;
     $target_file = $target_dir . $nama_file_logo_baru;
 
-    // 4. Pindahkan File
     if (move_uploaded_file($file_tmp, $target_file)) {
         if (!empty($logo_lama) && $logo_lama != $nama_file_logo_baru && file_exists($target_dir . $logo_lama)) {
              @unlink($target_dir . $logo_lama);

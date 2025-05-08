@@ -1,16 +1,13 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
-// Ambil data dari form
 $id_riwayat_pekerjaan = isset($_POST['id_riwayat_pekerjaan']) ? filter_var($_POST['id_riwayat_pekerjaan'], FILTER_VALIDATE_INT) : null;
 $tahun = isset($_POST['tahun']) ? trim($_POST['tahun']) : '';
 $posisi = isset($_POST['posisi']) ? trim($_POST['posisi']) : '';
 $perusahaan = isset($_POST['perusahaan']) ? trim($_POST['perusahaan']) : '';
 
-// Buat URL redirect kembali (jika error)
 $redirect_url = "editriwayatpekerjaan.php?data=". $id_riwayat_pekerjaan;
 
-// Validasi dasar
 if (empty($id_riwayat_pekerjaan)) {
      header("Location: riwayatpekerjaan.php?notif=editgagal&msg=invalidid");
      exit;
@@ -20,7 +17,6 @@ if (empty($tahun) || empty($posisi) || empty($perusahaan)) {
     exit;
 }
 
-// PERIKSA NAMA TABEL DAN KOLOM DI QUERY UPDATE INI!
 $sql_update = "UPDATE `riwayat_pekerjaan` SET
                     `tahun` = ?,
                     `posisi` = ?,
@@ -29,12 +25,9 @@ $sql_update = "UPDATE `riwayat_pekerjaan` SET
 $stmt_update = mysqli_prepare($koneksi, $sql_update);
 
 if ($stmt_update) {
-    // Bind parameter (s=string, i=integer)
     mysqli_stmt_bind_param($stmt_update, 'sssi', $tahun, $posisi, $perusahaan, $id_riwayat_pekerjaan);
 
-    // Eksekusi query
     if (mysqli_stmt_execute($stmt_update)) {
-        // Cek apakah ada baris yang terupdate (opsional, tapi bagus)
         if (mysqli_stmt_affected_rows($stmt_update) > 0) {
              mysqli_stmt_close($stmt_update);
              header("Location: riwayatpekerjaan.php?notif=editberhasil");
