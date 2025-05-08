@@ -1,9 +1,8 @@
 <?php
-// Tidak perlu session_start()
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 $id_master_universitas = null;
-$nama_universitas_lama = ''; // Default
+$nama_universitas_lama = '';
 
 // Validasi dan ambil ID dari URL
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
