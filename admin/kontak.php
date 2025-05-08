@@ -113,13 +113,11 @@ $start = ($page - 1) * $limit;
                     </thead>
                     <tbody>
                        <?php
-                            // Query count dengan search
                             $count_sql = "SELECT COUNT(k.`id_kontak`) as total
                                           FROM `kontak` k
                                           LEFT JOIN `master_topik` mt ON k.`id_topik` = mt.`id_master_topik`";
                             $params_count = []; $types_count = '';
                             if (!empty($search_query)) {
-                                // Cari di nama, email, atau pesan
                                 $count_sql .= " WHERE k.`nama` LIKE ? OR k.`email` LIKE ? OR k.`pesan` LIKE ?";
                                 $search_param_like = "%" . $search_query . "%";
                                 $params_count[] = &$search_param_like;
@@ -138,18 +136,15 @@ $start = ($page - 1) * $limit;
                                 mysqli_stmt_close($stmt_count);
                             } else { echo "<tr><td colspan='6' class='text-center text-danger'>Error menghitung data kontak.</td></tr>"; }
 
-
-                            // Query data dengan JOIN dan search
                             $sql_data = "SELECT k.`id_kontak`, k.`nama`, k.`email`, mt.`topik`, k.`pesan`
                                          FROM `kontak` k
                                          LEFT JOIN `master_topik` mt ON k.`id_topik` = mt.`id_master_topik`";
                             $params_data = []; $types_data = '';
                             if (!empty($search_query)) {
                                 $sql_data .= " WHERE k.`nama` LIKE ? OR k.`email` LIKE ? OR k.`pesan` LIKE ?";
-                                // Parameter sama dengan count
                                 $params_data[] = &$search_param_like; $params_data[] = &$search_param_like; $params_data[] = &$search_param_like; $types_data .= 'sss';
                             }
-                            $sql_data .= " ORDER BY k.`id_kontak` DESC LIMIT ?, ?"; // Order by ID terbaru
+                            $sql_data .= " ORDER BY k.`id_kontak` DESC LIMIT ?, ?";
                             $params_data[] = &$start; $params_data[] = &$limit; $types_data .= 'ii';
 
                             $stmt_data = mysqli_prepare($koneksi, $sql_data);
@@ -164,28 +159,26 @@ $start = ($page - 1) * $limit;
                                         $id_k = $data_k['id_kontak'];
                                         $nama_k = $data_k['nama'];
                                         $email_k = $data_k['email'];
-                                        $topik_k = $data_k['topik'] ?? '<span class="text-muted">N/A</span>'; // Handle jika topik null/hilang
+                                        $topik_k = $data_k['topik'] ?? '<span class="text-muted">N/A</span>';
                                         $pesan_k = $data_k['pesan'];
-                                        // Potong pesan jika terlalu panjang untuk tampilan tabel
                                         $pesan_tampil = strlen($pesan_k) > 100 ? substr($pesan_k, 0, 100) . "..." : $pesan_k;
                             ?>
                       <tr>
                         <td class="text-center"><?php echo $no; ?></td>
                         <td><?php echo htmlspecialchars($nama_k); ?></td>
                         <td><?php echo htmlspecialchars($email_k); ?></td>
-                        <td><?php echo $topik_k; // Sudah dihandle null ?></td>
-                        <td title="<?php echo htmlspecialchars($pesan_k); // Full pesan di title ?>">
-                            <?php echo nl2br(htmlspecialchars($pesan_tampil)); // Tampilkan potongan pesan, nl2br untuk baris baru ?>
+                        <td><?php echo $topik_k; ?></td>
+                        <td title="<?php echo htmlspecialchars($pesan_k);  ?>">
+                            <?php echo nl2br(htmlspecialchars($pesan_tampil)); ?>
                         </td>
                         <td align="center">
-                          <!-- Hanya tombol Hapus -->
                            <a href="javascript:void(0);" class="btn btn-xs btn-warning" title="Hapus" onclick="konfirmasiHapusKontak('Pesan dari <?php echo htmlspecialchars(addslashes($nama_k)); ?>', '<?php echo $id_k; ?>', '<?php echo urlencode($search_query); ?>', '<?php echo $page; ?>')">
                              <i class="fas fa-trash"></i></a>
                         </td>
                       </tr>
                       <?php
                                     $no++;
-                                    } // End while
+                                    }
                                 } else { echo "<tr><td colspan='6' class='text-center'>" . ($total_records > 0 ? "Tidak ada data di halaman ini." : "Belum ada pesan kontak masuk.") . "</td></tr>"; }
                                 mysqli_stmt_close($stmt_data);
                             } else { echo "<tr><td colspan='6' class='text-center text-danger'>Error mengambil data kontak.</td></tr>"; }
@@ -200,7 +193,6 @@ $start = ($page - 1) * $limit;
                 <ul class="pagination pagination-sm m-0 float-right">
                    <?php
                       $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
-                      // Logika Pagination (copy dari sebelumnya)
                       if ($page > 1) { echo "<li class='page-item'><a class='page-link' href='kontak.php?page=1{$query_string}'>« First</a></li>"; echo "<li class='page-item'><a class='page-link' href='kontak.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>"; } else { echo "<li class='page-item disabled'><span class='page-link'>« First</span></li>"; echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>"; }
                       $num_links = 2; $start_loop = max(1, $page - $num_links); $end_loop = min($total_pages, $page + $num_links);
                       if ($start_loop > 1) { echo "<li class='page-item'><a class='page-link' href='kontak.php?page=1{$query_string}'>1</a></li>"; if ($start_loop > 2) { echo "<li class='page-item disabled'><span class='page-link'>...</span></li>"; } }
