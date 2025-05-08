@@ -1,6 +1,3 @@
-<?php
-// include('../koneksi/koneksi.php'); // Jika perlu
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +25,7 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -43,17 +40,17 @@
             <!-- /.card-header -->
             <!-- form start -->
             </br>
-            <div class="col-sm-10 offset-sm-1"> <!-- Posisi Notifikasi -->
+            <div class="col-sm-10 offset-sm-1">
                 <?php if(!empty($_GET['notif'])){?>
                     <?php if($_GET['notif']=="tambahkosong"){?>
                     <div class="alert alert-danger" role="alert">
                         Maaf, nama universitas wajib diisi.
                     </div>
-                    <?php } else if($_GET['notif']=="duplikat"){ // Ganti notif gagal jadi duplikat ?>
+                    <?php } else if($_GET['notif']=="duplikat"){  ?>
                     <div class="alert alert-warning" role="alert">
                         Maaf, nama universitas tersebut sudah ada.
                     </div>
-                     <?php } else if($_GET['notif']=="tambahgagal"){ // Notif gagal umum ?>
+                     <?php } else if($_GET['notif']=="tambahgagal"){ ?>
                     <div class="alert alert-danger" role="alert">
                        Maaf, terjadi kesalahan saat menyimpan data.
                     </div>
@@ -66,7 +63,6 @@
                     <div class="form-group row">
                         <label for="universitas" class="col-sm-3 col-form-label">Universitas <span class="text-danger">*</span></label>
                         <div class="col-sm-7">
-                        <!-- Tambahkan required -->
                         <input type="text" class="form-control" id="universitas" name="universitas" value="" required>
                         </div>
                     </div>

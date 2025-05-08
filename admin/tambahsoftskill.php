@@ -25,7 +25,7 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -50,8 +50,7 @@
           <div class="alert alert-danger" role="alert">
             Maaf, gagal menambahkan data. Mungkin nama soft skill sudah ada atau terjadi kesalahan server.
           </div>
-        <?php } else if ($_GET['notif'] == "duplikat") { ?> <!-- Tambah notifikasi duplikat -->
-          <div class="alert alert-danger" role="alert">
+        <?php } else if ($_GET['notif'] == "duplikat") { ?>
             Maaf, nama soft skill tersebut sudah ada.
           </div>
         <?php } ?>

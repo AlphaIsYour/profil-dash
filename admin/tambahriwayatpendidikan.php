@@ -13,7 +13,6 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
 <head>
 <?php include("includes/head.php") ?>
 <title>Tambah Riwayat Pendidikan</title>
-<!-- Tambahkan CSS untuk Select2 jika menggunakan -->
 <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 </head>
@@ -38,7 +37,7 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -103,28 +102,26 @@ $query_univ = mysqli_query($koneksi, $sql_univ);
                         </select>
                         </div>
                     </div>
-                </div> <!-- /.card-body -->
+                </div>
                 <div class="card-footer">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-info float-right"><i class="fas fa-plus"></i> Tambah</button>
                     </div>
-                </div> <!-- /.card-footer -->
+                </div> 
             </form>
-        </div> <!-- /.card -->
-    </section> <!-- /.content -->
-  </div> <!-- /.content-wrapper -->
+        </div>
+    </section>
+  </div>
   <?php include("includes/footer.php") ?>
-</div> <!-- ./wrapper -->
+</div>
 
 <?php include("includes/script.php") ?>
 <!-- Tambahkan JS untuk Select2 -->
 <script src="plugins/select2/js/select2.full.min.js"></script>
 <script>
   $(function () {
-    //Initialize Select2 Elements
     $('.select2').select2()
 
-    //Initialize Select2 Elements with Bootstrap 4 theme
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     })

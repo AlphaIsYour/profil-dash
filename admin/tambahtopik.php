@@ -1,6 +1,3 @@
-<?php
-// include('../koneksi/koneksi.php'); // Jika perlu
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +25,7 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -44,7 +41,7 @@
       <!-- /.card-header -->
       <!-- form start -->
       </br>
-      <div class="col-sm-10 offset-sm-1"> <!-- Atur posisi notifikasi -->
+      <div class="col-sm-10 offset-sm-1">
           <?php if (!empty($_GET['notif'])) { ?>
               <?php if ($_GET['notif'] == "tambahkosong") { ?>
                   <div class="alert alert-danger" role="alert"> Maaf, data topik wajib diisi.</div>
@@ -61,7 +58,6 @@
           <div class="form-group row">
             <label for="topik" class="col-sm-3 col-form-label">Topik</label>
             <div class="col-sm-7">
-              <!-- Pastikan name="topik" dan tambahkan required -->
               <input type="text" class="form-control" id="topik" name="topik" value="" required>
             </div>
           </div>

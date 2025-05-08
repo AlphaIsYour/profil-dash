@@ -1,45 +1,34 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
-// --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
-        // Validasi ID adalah integer
         if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
-             header("Location: topik.php?notif=hapusgagal&msg=invalidid"); // ID tidak valid
+             header("Location: topik.php?notif=hapusgagal&msg=invalidid");
              exit;
         }
         $id_master_topik = (int)$_GET['data'];
-
-        // Hapus dari tabel master (master_topik)
-        // WARNING: Jika ada tabel lain dengan FK ke sini dan ON DELETE RESTRICT, ini akan GAGAL jika data terkait masih ada.
-        // Jika ON DELETE CASCADE, data terkait akan ikut terhapus.
-        // Jika Anda TIDAK ingin data terkait terhapus, jangan lakukan delete master, atau ubah FK jadi ON DELETE SET NULL / ON DELETE NO ACTION.
         $sql_delete = "DELETE FROM `master_topik` WHERE `id_master_topik` = ?";
         $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
 
         if ($stmt_delete) {
-            mysqli_stmt_bind_param($stmt_delete, 'i', $id_master_topik); // 'i' for integer
+            mysqli_stmt_bind_param($stmt_delete, 'i', $id_master_topik);
             mysqli_stmt_execute($stmt_delete);
 
             if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
                 header("Location: topik.php?notif=hapusberhasil");
             } else {
-                // Bisa karena ID tidak ditemukan atau karena constraint FK (ON DELETE RESTRICT)
-                $error_info = mysqli_stmt_error($stmt_delete); // Cek apakah ada error spesifik
-                // Log error jika perlu: error_log("Gagal hapus topik $id_master_topik: $error_info");
+                $error_info = mysqli_stmt_error($stmt_delete);
                 header("Location: topik.php?notif=hapusgagal&msg=failed" . (!empty($error_info) ? '_db' : ''));
             }
             mysqli_stmt_close($stmt_delete);
         } else {
-            // Gagal prepare statement
             header("Location: topik.php?notif=hapusgagal&msg=prepare");
         }
         exit;
     }
 }
 
-// --- Logic Search & Pagination ---
 $search_query = "";
 if (isset($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
@@ -55,7 +44,7 @@ $start = ($page - 1) * $limit;
 <html>
 <head>
 <?php include("includes/head.php") ?>
-<title>Data Topik</title> <!-- Title spesifik -->
+<title>Data Topik</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -69,7 +58,7 @@ $start = ($page - 1) * $limit;
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fas fa-tags"></i> Topik</h3> <!-- Ganti ikon -->
+            <h3><i class="fas fa-tags"></i> Topik</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -77,7 +66,7 @@ $start = ($page - 1) * $limit;
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -94,13 +83,13 @@ $start = ($page - 1) * $limit;
               <div class="col-md-12">
                 <form method="GET" action="topik.php">
                     <div class="row">
-                        <div class="col-md-4 mb-2"> <!-- Ganti bottom-10 jadi mb-2 -->
+                        <div class="col-md-4 mb-2">
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari topik..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 mb-2">
                           <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>  Cari</button>
                         </div>
-                    </div><!-- .row -->
+                    </div>
                   </form>
                 </div><br>
               <div class="col-sm-12">
@@ -120,29 +109,28 @@ $start = ($page - 1) * $limit;
               </div>
 
               <div class="table-responsive">
-                <table class="table table-bordered table-striped"> <!-- Tambah table-striped -->
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th width="5%" class="text-center">No</th> <!-- text-center -->
+                      <th width="5%" class="text-center">No</th>
                       <th width="80%">Topik</th>
                       <th width="15%"><center>Aksi</center></th>
                     </tr>
                   </thead>
                   <tbody>
                   <?php
-                        // Count total records for pagination with prepared statement
                         $count_sql = "SELECT COUNT(*) as total FROM `master_topik`";
                         $params_count = [];
                         $types_count = '';
                         if (!empty($search_query)) {
                             $count_sql .= " WHERE `topik` LIKE ?";
                             $search_param_count = "%" . $search_query . "%";
-                            $params_count[] = &$search_param_count; // Pass by reference
+                            $params_count[] = &$search_param_count;
                             $types_count .= 's';
                         }
 
-                        $total_records = 0; // Default value
-                        $total_pages = 0; // Default value
+                        $total_records = 0;
+                        $total_pages = 0;
                         $stmt_count = mysqli_prepare($koneksi, $count_sql);
                         if ($stmt_count) {
                            if (!empty($search_query)) {
@@ -150,7 +138,7 @@ $start = ($page - 1) * $limit;
                            }
                             mysqli_stmt_execute($stmt_count);
                             $result_count = mysqli_stmt_get_result($stmt_count);
-                            if ($result_count) { // Cek hasil get result
+                            if ($result_count) { 
                                 $row_count = mysqli_fetch_assoc($result_count);
                                 $total_records = $row_count['total'];
                                 $total_pages = ceil($total_records / $limit);
@@ -162,8 +150,6 @@ $start = ($page - 1) * $limit;
                             echo "<tr><td colspan='3' class='text-center text-danger'>Error menghitung data.</td></tr>";
                         }
 
-
-                        // Main query for fetching topik with prepared statement
                         $sql_data = "SELECT `id_master_topik`, `topik` FROM `master_topik`";
                         $params_data = [];
                         $types_data = '';
@@ -171,17 +157,17 @@ $start = ($page - 1) * $limit;
                         if (!empty($search_query)) {
                             $sql_data .= " WHERE `topik` LIKE ?";
                             $search_param_data = "%" . $search_query . "%";
-                            $params_data[] = &$search_param_data; // Pass by reference
+                            $params_data[] = &$search_param_data;
                             $types_data .= 's';
                         }
                         $sql_data .= " ORDER BY `topik` LIMIT ?, ?";
-                        $params_data[] = &$start;  // Pass by reference
-                        $params_data[] = &$limit;  // Pass by reference
+                        $params_data[] = &$start;
+                        $params_data[] = &$limit;
                         $types_data .= 'ii';
 
                         $stmt_data = mysqli_prepare($koneksi, $sql_data);
                         if ($stmt_data) {
-                            if (!empty($params_data)) { // Bind hanya jika ada parameter
+                            if (!empty($params_data)) { 
                                mysqli_stmt_bind_param($stmt_data, $types_data, ...$params_data);
                             }
                             mysqli_stmt_execute($stmt_data);
@@ -191,7 +177,7 @@ $start = ($page - 1) * $limit;
                                 $no = $start + 1;
                                 while ($data_u = mysqli_fetch_assoc($result_data)) {
                                     $id_master_topik = $data_u['id_master_topik'];
-                                    $topik_nama = $data_u['topik']; // Ganti nama variabel
+                                    $topik_nama = $data_u['topik'];
                             ?>
                     <tr>
                       <td class="text-center"><?php echo $no; ?></td>
@@ -208,13 +194,13 @@ $start = ($page - 1) * $limit;
                                     $no++;
                                 }
                             } else {
-                                if ($total_records > 0) { // Jika ada record total tapi halaman ini kosong
+                                if ($total_records > 0) {
                                     echo "<tr><td colspan='3' class='text-center'>Tidak ada data di halaman ini.</td></tr>";
-                                } else { // Jika memang tidak ada data sama sekali
+                                } else {
                                     echo "<tr><td colspan='3' class='text-center'>Data tidak ditemukan.</td></tr>";
                                 }
                             }
-                             mysqli_stmt_close($stmt_data); // Tutup statement data
+                             mysqli_stmt_close($stmt_data);
                         } else {
                              echo "<tr><td colspan='3' class='text-center text-danger'>Error mengambil data topik.</td></tr>";
                         }
@@ -224,12 +210,10 @@ $start = ($page - 1) * $limit;
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
-                <?php if ($total_records > 0 && $total_pages > 1) : // Tampilkan pagination hanya jika perlu ?>
+                <?php if ($total_records > 0 && $total_pages > 1) :?>
                 <ul class="pagination pagination-sm m-0 float-right">
                   <?php
                   $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
-                  // Logika pagination (sama seperti hard skill, sudah robust)
-                  // Tombol First dan Previous
                   if ($page > 1) {
                       echo "<li class='page-item'><a class='page-link' href='topik.php?page=1{$query_string}'>« First</a></li>";
                       echo "<li class='page-item'><a class='page-link' href='topik.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>";
@@ -238,7 +222,6 @@ $start = ($page - 1) * $limit;
                       echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>";
                   }
 
-                  // Nomor Halaman
                   $num_links = 2;
                   $start_loop = max(1, $page - $num_links);
                   $end_loop = min($total_pages, $page + $num_links);
@@ -265,7 +248,6 @@ $start = ($page - 1) * $limit;
                       echo "<li class='page-item'><a class='page-link' href='topik.php?page={$total_pages}{$query_string}'>{$total_pages}</a></li>";
                   }
 
-                  // Tombol Next dan Last
                   if ($page < $total_pages) {
                       echo "<li class='page-item'><a class='page-link' href='topik.php?page=".($page + 1)."{$query_string}'>Next ›</a></li>";
                       echo "<li class='page-item'><a class='page-link' href='topik.php?page={$total_pages}{$query_string}'>Last »</a></li>";
@@ -288,14 +270,8 @@ $start = ($page - 1) * $limit;
 <!-- ./wrapper -->
 <?php include("includes/script.php") ?>
 <script>
-// Fungsi konfirmasi hapus topik
 function konfirmasiHapusTopik(nama, id, katakunci, page) {
-  // Tambahkan peringatan tentang data terkait jika perlu (tergantung setup FK Anda)
   let pesanKonfirmasi = `Anda yakin ingin menghapus topik: ${nama}?`;
-  // Contoh jika Anda tahu ada potensi data terkait:
-  // pesanKonfirmasi += "\n\nPERINGATAN: Menghapus topik ini mungkin akan menghapus data lain yang terkait (misal: artikel, post) jika menggunakan ON DELETE CASCADE.";
-  // Atau jika menggunakan ON DELETE RESTRICT:
-  // pesanKonfirmasi += "\n\nCATATAN: Penghapusan akan gagal jika topik ini masih digunakan oleh data lain (misal: artikel, post).";
 
   if (confirm(pesanKonfirmasi)) {
     window.location.href = `topik.php?aksi=hapus&data=${id}&katakunci=${encodeURIComponent(katakunci)}&page=${page}`;
