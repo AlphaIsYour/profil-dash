@@ -33,14 +33,11 @@ if ($stmt_update) {
              header("Location: riwayatpekerjaan.php?notif=editberhasil");
              exit;
         } else {
-            // Tidak ada baris terupdate (mungkin data sama atau ID salah?)
              mysqli_stmt_close($stmt_update);
-             header("Location: riwayatpekerjaan.php?notif=editgagal&msg=nochange"); // Beri notif beda
+             header("Location: riwayatpekerjaan.php?notif=editgagal&msg=nochange");
              exit;
         }
     } else {
-        // Gagal eksekusi query
-        // error_log("Execute failed (update pekerjaan): " . mysqli_stmt_error($stmt_update));
         mysqli_stmt_close($stmt_update);
         header("Location: {$redirect_url}¬if=editgagal&msg=db");
         exit;
