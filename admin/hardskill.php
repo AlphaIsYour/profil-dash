@@ -1,17 +1,15 @@
 <?php
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
-// Logic Hapus dengan Transaksi
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
-        // Validasi ID adalah integer
+
         if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
-             header("Location: hardskill.php?notif=hapusgagal"); // ID tidak valid
+             header("Location: hardskill.php?notif=hapusgagal"); 
              exit;
         }
         $id_master_hard_skill = (int)$_GET['data'];
 
-        // Mulai transaksi
         mysqli_begin_transaction($koneksi);
 
         try {
