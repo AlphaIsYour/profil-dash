@@ -118,8 +118,7 @@ $start = ($page - 1) * $limit;
                     </thead>
                     <tbody>
                        <?php
-                            // Query count
-                            $count_sql = "SELECT COUNT(*) as total FROM `riwayat_pekerjaan` rp"; // Ganti nama tabel jika perlu
+                            $count_sql = "SELECT COUNT(*) as total FROM `riwayat_pekerjaan` rp";
                             $params_count = []; $types_count = '';
                             if (!empty($search_query)) {
                                 $count_sql .= " WHERE rp.`posisi` LIKE ? OR rp.`perusahaan` LIKE ?";

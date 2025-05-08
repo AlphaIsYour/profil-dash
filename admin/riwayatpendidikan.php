@@ -1,7 +1,5 @@
 <?php
 include('../koneksi/koneksi.php');
-
-// --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
         if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
@@ -31,7 +29,6 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     }
 }
 
-// --- Logic Search & Pagination ---
 $search_query = "";
 if (isset($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
@@ -54,7 +51,6 @@ $start = ($page - 1) * $limit;
 <?php include("includes/header.php") ?>
 <?php include("includes/sidebar.php") ?>
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
@@ -86,7 +82,7 @@ $start = ($page - 1) * $limit;
               <div class="col-md-12">
                   <form method="GET" action="riwayatpendidikan.php">
                     <div class="row">
-                        <div class="col-md-4 mb-2"> <!-- mb-2 -->
+                        <div class="col-md-4 mb-2">
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari berdasarkan Jurusan/Tahun..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 mb-2">

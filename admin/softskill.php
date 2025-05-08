@@ -1,49 +1,36 @@
 <?php
 include('../koneksi/koneksi.php');
 
-// Hapus logic
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
         $id_master_soft_skill = mysqli_real_escape_string($koneksi, $_GET['data']);
 
-        // Mulai transaksi
         mysqli_begin_transaction($koneksi);
 
         try {
-            // 1. Hapus dari tabel penghubung (soft_skill) - OPSIONAL, jika tabel ini ada dan digunakan
-            // Jika tabel soft_skill tidak ada/tidak relevan untuk penghapusan master, baris ini bisa di-comment atau dihapus
             $sql_dh_detail = "DELETE FROM `soft_skill` WHERE `id_master_soft_skill` = ?";
             $stmt_detail = mysqli_prepare($koneksi, $sql_dh_detail);
-            mysqli_stmt_bind_param($stmt_detail, 'i', $id_master_soft_skill); // Asumsi ID adalah integer
+            mysqli_stmt_bind_param($stmt_detail, 'i', $id_master_soft_skill);
             mysqli_stmt_execute($stmt_detail);
             mysqli_stmt_close($stmt_detail);
-            // Akhir bagian opsional
 
-            // 2. Hapus dari tabel master (master_soft_skill)
             $sql_dh_master = "DELETE FROM `master_soft_skill` WHERE `id_master_soft_skill` = ?";
             $stmt_master = mysqli_prepare($koneksi, $sql_dh_master);
-            mysqli_stmt_bind_param($stmt_master, 'i', $id_master_soft_skill); // Asumsi ID adalah integer
+            mysqli_stmt_bind_param($stmt_master, 'i', $id_master_soft_skill);
             mysqli_stmt_execute($stmt_master);
             mysqli_stmt_close($stmt_master);
 
-            // Jika semua query berhasil, commit transaksi
             mysqli_commit($koneksi);
             header("Location: softskill.php?notif=hapusberhasil");
             exit;
 
         } catch (mysqli_sql_exception $exception) {
-            // Jika terjadi error, rollback transaksi
             mysqli_rollback($koneksi);
-            // Opsional: Tampilkan error atau redirect dengan notifikasi gagal
-            // echo "Error: Gagal menghapus data. " . $exception->getMessage();
-            header("Location: softskill.php?notif=hapusgagal"); // Tambahkan notifikasi gagal jika perlu
+            header("Location: softskill.php?notif=hapusgagal");
             exit;
         }
     }
 }
-
-// --- Sisa kode softskill.php (Search, Pagination, Display) tetap sama seperti yang Anda berikan ---
-// Pastikan tipe data binding di prepared statement sesuai (misal 's' untuk string, 'i' untuk integer)
 
 $search_query = "";
 if (isset($_GET['katakunci']) && !empty($_GET['katakunci'])) {
@@ -52,7 +39,7 @@ if (isset($_GET['katakunci']) && !empty($_GET['katakunci'])) {
 
 $limit = 10;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-if ($page < 1) $page = 1; // Pastikan halaman tidak kurang dari 1
+if ($page < 1) $page = 1;
 $start = ($page - 1) * $limit;
 ?>
 
