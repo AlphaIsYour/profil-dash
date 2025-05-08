@@ -37,16 +37,14 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
 
         } catch (mysqli_sql_exception $exception) {
             mysqli_rollback($koneksi);
-            // Log error jika perlu: error_log("Error deleting hard skill: " . $exception->getMessage());
             header("Location: hardskill.php?notif=hapusgagal");
             exit;
         }
     }
 }
 
-// --- Logic Search & Pagination ---
 $search_query = "";
-if (isset($_GET['katakunci'])) { // Cukup cek isset, empty() tidak perlu jika string kosong diizinkan
+if (isset($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']); // Tetap escape untuk query LIKE
 }
 
