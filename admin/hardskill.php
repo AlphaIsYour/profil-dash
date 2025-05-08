@@ -25,12 +25,12 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
             mysqli_stmt_execute($stmt_master);
 
             if (mysqli_stmt_affected_rows($stmt_master) > 0) {
-                mysqli_commit($koneksi); // Commit jika berhasil
+                mysqli_commit($koneksi);
                 header("Location: hardskill.php?notif=hapusberhasil");
             } else {
-                 // Jika tidak ada baris terhapus (misal ID tidak ditemukan), rollback
+
                 mysqli_rollback($koneksi);
-                header("Location: hardskill.php?notif=hapusgagal&msg=notfound"); // Beri pesan ID tidak ditemukan
+                header("Location: hardskill.php?notif=hapusgagal&msg=notfound"); 
             }
             mysqli_stmt_close($stmt_master);
             exit;
