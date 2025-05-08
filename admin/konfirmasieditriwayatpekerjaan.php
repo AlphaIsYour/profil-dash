@@ -43,11 +43,8 @@ if ($stmt_update) {
         exit;
     }
 } else {
-    // Gagal prepare statement (kemungkinan besar typo nama tabel/kolom)
-    // error_log("Prepare failed (update pekerjaan): " . mysqli_error($koneksi));
     header("Location: {$redirect_url}¬if=editgagal&msg=prepare");
     exit;
 }
 
-// mysqli_close($koneksi); // Opsional
 ?>

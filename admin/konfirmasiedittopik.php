@@ -8,7 +8,6 @@ $topik_baru = isset($_POST['topik']) ? trim($_POST['topik']) : '';
 
 $redirect_url = "edittopik.php?data=" . urlencode($id_master_topik);
 
-// 1. Validasi dasar
 if (empty($id_master_topik)) {
     header("Location: topik.php?notif=editgagal&msg=invalidid");
     exit;
@@ -18,8 +17,6 @@ if (empty($topik_baru)) {
     exit;
 }
 
-
-// 2. Validasi: Cek duplikasi nama baru (untuk ID yang BERBEDA)
 $sql_check = "SELECT `id_master_topik` FROM `master_topik` WHERE `topik` = ? AND `id_master_topik` != ?";
 $stmt_check = mysqli_prepare($koneksi, $sql_check);
 
@@ -39,7 +36,6 @@ if (mysqli_stmt_num_rows($stmt_check) > 0) {
 }
 mysqli_stmt_close($stmt_check);
 
-// 3. Update data di database
 $sql_update = "UPDATE `master_topik` SET `topik` = ? WHERE `id_master_topik` = ?";
 $stmt_update = mysqli_prepare($koneksi, $sql_update);
 
@@ -50,7 +46,6 @@ if (!$stmt_update) {
 
 mysqli_stmt_bind_param($stmt_update, 'si', $topik_baru, $id_master_topik);
 
-// Eksekusi update
 if (mysqli_stmt_execute($stmt_update)) {
     mysqli_stmt_close($stmt_update);
     header("Location: topik.php?notif=editberhasil");
