@@ -219,7 +219,6 @@ $start = ($page - 1) * $limit;
                   <?php
                   $query_string = !empty($search_query) ? '&katakunci='.urlencode($search_query) : '';
 
-                  // Tombol First dan Previous
                   if ($page > 1) {
                       echo "<li class='page-item'><a class='page-link' href='hardskill.php?page=1{$query_string}'>« First</a></li>";
                       echo "<li class='page-item'><a class='page-link' href='hardskill.php?page=".($page - 1)."{$query_string}'>‹ Prev</a></li>";
@@ -228,8 +227,7 @@ $start = ($page - 1) * $limit;
                       echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>";
                   }
 
-                  // Nomor Halaman (Logic sama seperti softskill.php)
-                  $num_links = 2; // Jumlah link sebelum dan sesudah halaman aktif
+                  $num_links = 2;
                   $start_loop = max(1, $page - $num_links);
                   $end_loop = min($total_pages, $page + $num_links);
 
