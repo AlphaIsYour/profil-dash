@@ -45,12 +45,12 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
 
 $search_query = "";
 if (isset($_GET['katakunci'])) {
-    $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']); // Tetap escape untuk query LIKE
+    $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
 }
 
 $limit = 10;
 $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]) : 1;
-if ($page === false) $page = 1; // Jika filter gagal, default ke halaman 1
+if ($page === false) $page = 1;
 $start = ($page - 1) * $limit;
 ?>
 
@@ -58,7 +58,7 @@ $start = ($page - 1) * $limit;
 <html>
 <head>
 <?php include("includes/head.php") ?>
-<title>Data Hard Skill</title> <!-- Tambahkan title spesifik -->
+<title>Data Hard Skill</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
