@@ -253,7 +253,6 @@ $start = ($page - 1) * $limit;
                       echo "<li class='page-item'><a class='page-link' href='hardskill.php?page={$total_pages}{$query_string}'>{$total_pages}</a></li>";
                   }
 
-                  // Tombol Next dan Last
                   if ($page < $total_pages) {
                       echo "<li class='page-item'><a class='page-link' href='hardskill.php?page=".($page + 1)."{$query_string}'>Next ›</a></li>";
                       echo "<li class='page-item'><a class='page-link' href='hardskill.php?page={$total_pages}{$query_string}'>Last »</a></li>";
@@ -276,10 +275,8 @@ $start = ($page - 1) * $limit;
 <!-- ./wrapper -->
 <?php include("includes/script.php") ?>
 <script>
-// Fungsi konfirmasi hapus yang lebih baik
 function konfirmasiHapus(nama, id, katakunci, page) {
   if (confirm(`Anda yakin ingin menghapus data: ${nama}? Data terkait di tabel lain (jika ada) juga akan dihapus.`)) {
-    // Arahkan ke URL hapus dengan parameter state (katakunci & page)
     window.location.href = `hardskill.php?aksi=hapus&data=${id}&katakunci=${encodeURIComponent(katakunci)}&page=${page}`;
   }
 }
