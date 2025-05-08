@@ -4,29 +4,27 @@ include('../koneksi/koneksi.php');
 $id_master_universitas = null;
 $nama_universitas_lama = '';
 
-// Validasi dan ambil ID dari URL
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $id_master_universitas = (int)$_GET['data'];
 
-    // Query ambil data univ lama
     $sql_get = "SELECT `nama_universitas` FROM `master_universitas` WHERE `id_master_universitas` = ?";
     $stmt_get = mysqli_prepare($koneksi, $sql_get);
 
     if ($stmt_get) {
-        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_universitas); // 'i' untuk integer ID
+        mysqli_stmt_bind_param($stmt_get, 'i', $id_master_universitas); 
         mysqli_stmt_execute($stmt_get);
         $result_get = mysqli_stmt_get_result($stmt_get);
 
         if ($data_get = mysqli_fetch_assoc($result_get)) {
             $nama_universitas_lama = $data_get['nama_universitas'];
         } else {
-             header("Location: universitas.php?notif=datanotfound"); // Data tidak ada
+             header("Location: universitas.php?notif=datanotfound");
              exit;
         }
         mysqli_stmt_close($stmt_get);
     } else {
         echo "Error: Gagal menyiapkan query pengambilan data universitas.";
-        exit; // Atau redirect dengan notif error
+        exit; 
     }
 
 } else {
