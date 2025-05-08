@@ -9,12 +9,11 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
         }
         $id_master_universitas = (int)$_GET['data'];
 
-        // Hapus dari tabel master
         $sql_delete = "DELETE FROM `master_universitas` WHERE `id_master_universitas` = ?";
         $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
 
         if ($stmt_delete) {
-            mysqli_stmt_bind_param($stmt_delete, 'i', $id_master_universitas); // 'i' for integer
+            mysqli_stmt_bind_param($stmt_delete, 'i', $id_master_universitas);
             mysqli_stmt_execute($stmt_delete);
 
             if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
@@ -25,14 +24,12 @@ if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
             }
             mysqli_stmt_close($stmt_delete);
         } else {
-            // Gagal prepare statement
             header("Location: universitas.php?notif=hapusgagal&msg=prepare");
         }
         exit;
     }
 }
 
-// --- Logic Search & Pagination ---
 $search_query = "";
 if (isset($_GET['katakunci'])) {
     $search_query = mysqli_real_escape_string($koneksi, $_GET['katakunci']);
@@ -48,7 +45,7 @@ $start = ($page - 1) * $limit;
 <html>
 <head>
 <?php include("includes/head.php") ?>
-<title>Data Universitas</title> <!-- Title spesifik -->
+<title>Data Universitas</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -69,7 +66,7 @@ $start = ($page - 1) * $limit;
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -86,13 +83,13 @@ $start = ($page - 1) * $limit;
               <div class="col-md-12">
                 <form method="GET" action="universitas.php">
                     <div class="row">
-                        <div class="col-md-4 mb-2"> <!-- Ganti bottom-10 jadi mb-2 -->
+                        <div class="col-md-4 mb-2">
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari universitas..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 mb-2">
-                          <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>  Cari</button>
+                          <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>Cari</button>
                         </div>
-                    </div><!-- .row -->
+                    </div>
                   </form>
                 </div><br>
               <div class="col-sm-12">
@@ -112,17 +109,16 @@ $start = ($page - 1) * $limit;
               </div>
 
               <div class="table-responsive">
-                <table class="table table-bordered table-striped"> <!-- Tambah table-striped -->
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th width="5%" class="text-center">No</th> <!-- text-center -->
+                      <th width="5%" class="text-center">No</th>
                       <th width="80%">Universitas</th>
                       <th width="15%"><center>Aksi</center></th>
                     </tr>
                   </thead>
                   <tbody>
                   <?php
-                        // Count total records
                         $count_sql = "SELECT COUNT(*) as total FROM `master_universitas`";
                         $params_count = [];
                         $types_count = '';
@@ -133,8 +129,8 @@ $start = ($page - 1) * $limit;
                             $types_count .= 's';
                         }
 
-                        $total_records = 0; // Default
-                        $total_pages = 0; // Default
+                        $total_records = 0;
+                        $total_pages = 0;
                         $stmt_count = mysqli_prepare($koneksi, $count_sql);
                         if ($stmt_count) {
                            if (!empty($search_query)) {
@@ -223,7 +219,6 @@ $start = ($page - 1) * $limit;
                       echo "<li class='page-item disabled'><span class='page-link'>‹ Prev</span></li>";
                   }
 
-                  // Nomor Halaman
                   $num_links = 2;
                   $start_loop = max(1, $page - $num_links);
                   $end_loop = min($total_pages, $page + $num_links);
@@ -250,7 +245,6 @@ $start = ($page - 1) * $limit;
                       echo "<li class='page-item'><a class='page-link' href='universitas.php?page={$total_pages}{$query_string}'>{$total_pages}</a></li>";
                   }
 
-                  // Tombol Next dan Last
                   if ($page < $total_pages) {
                       echo "<li class='page-item'><a class='page-link' href='universitas.php?page=".($page + 1)."{$query_string}'>Next ›</a></li>";
                       echo "<li class='page-item'><a class='page-link' href='universitas.php?page={$total_pages}{$query_string}'>Last »</a></li>";

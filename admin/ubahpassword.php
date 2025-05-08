@@ -1,8 +1,7 @@
 <?php
-session_start(); // HARUS ada di paling atas
+session_start();
 include("../koneksi/koneksi.php");
 
-// 1. Cek Login
 if (!isset($_SESSION['id_user'])) {
     header("Location: ../login.php?gagal=aksesditolak");
     exit;
@@ -12,13 +11,11 @@ $id_user_login = $_SESSION['id_user'];
 $notif = '';
 $alert_type = '';
 
-// 2. Proses form jika POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pass_lama_input = trim($_POST['pass_lama'] ?? '');
     $pass_baru = trim($_POST['pass_baru'] ?? '');
     $konfirmasi_pass = trim($_POST['konfirmasi'] ?? '');
 
-    // 3. Validasi Input
     if (empty($pass_lama_input) || empty($pass_baru) || empty($konfirmasi_pass)) {
         $notif = 'Semua field password wajib diisi.';
         $alert_type = 'danger';
@@ -26,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $notif = 'Password Baru dan Konfirmasi Password Baru tidak cocok.';
         $alert_type = 'danger';
     } else {
-        // 4. Validasi Password Lama (MD5)
         $sql_get_pass = "SELECT `password` FROM `user` WHERE `id_user` = ?";
         $stmt_get = mysqli_prepare($koneksi, $sql_get_pass);
 
@@ -38,30 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             mysqli_stmt_close($stmt_get);
 
             if ($user_data && isset($user_data['password'])) {
-              $password_db = $user_data['password']; // Ini bisa MD5 atau bcrypt hash
-              $password_lama_cocok = false; // Flag
-
-              // --- PERBAIKAN LOGIKA VERIFIKASI ---
-              // Prioritaskan cek dengan password_verify (untuk hash baru/bcrypt)
+              $password_db = $user_data['password'];
+              $password_lama_cocok = false;
               if (password_verify($pass_lama_input, $password_db)) {
                   $password_lama_cocok = true;
               }
-              // Jika tidak cocok dengan password_verify, BARU cek sebagai MD5 LAMA
-              // (Kita bisa tambahkan cek panjang string === 32 jika mau lebih yakin itu MD5)
               else if (strlen($password_db) === 32 && md5($pass_lama_input) === $password_db) {
                    $password_lama_cocok = true;
-                   // Cocok sebagai MD5 lama, akan diupdate ke hash baru nanti
               }
-              // --- AKHIR PERBAIKAN LOGIKA VERIFIKASI ---
-
 
               if ($password_lama_cocok) {
-                  // Password lama BENAR (baik itu MD5 atau hash baru)
 
-                  // 5. Hash Password Baru (selalu gunakan password_hash)
                   $hashed_pass_baru = password_hash($pass_baru, PASSWORD_DEFAULT);
 
-                  // 6. Update Password Baru (yang sudah di-hash) ke Database
                   $sql_update = "UPDATE `user` SET `password` = ? WHERE `id_user` = ?";
                   $stmt_update = mysqli_prepare($koneksi, $sql_update);
 
@@ -69,42 +54,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                       mysqli_stmt_bind_param($stmt_update, 'si', $hashed_pass_baru, $id_user_login);
 
                       if (mysqli_stmt_execute($stmt_update)) {
-                          // Berhasil update
                           $notif = 'Password berhasil diubah.';
                           $alert_type = 'success';
-                          $_POST = []; // Kosongkan form
+                          $_POST = [];
                       } else {
-                          // Gagal update DB
                           $notif = 'Gagal mengubah password. Terjadi kesalahan database.';
                           $alert_type = 'danger';
-                          // error_log("Execute failed (update password): " . mysqli_stmt_error($stmt_update));
                       }
                       mysqli_stmt_close($stmt_update);
                   } else {
-                       // Gagal prepare statement update
                        $notif = 'Gagal mengubah password. Terjadi kesalahan (prepare update).';
                        $alert_type = 'danger';
-                       // error_log("Prepare failed (update password): " . mysqli_error($koneksi));
                   }
 
               } else {
-                  // Password lama SALAH (tidak cocok via password_verify maupun md5)
                   $notif = 'Password Lama yang Anda masukkan salah.';
                   $alert_type = 'danger';
               }
           } else {
-              // User tidak ditemukan
               $notif = 'Gagal mengambil data user.';
               $alert_type = 'danger';
           }
         } else {
-             // Gagal prepare statement get password
              $notif = 'Gagal memverifikasi password lama. Terjadi kesalahan (prepare get).';
              $alert_type = 'danger';
-             // error_log("Prepare failed (get password): " . mysqli_error($koneksi));
         }
     }
-    // Notifikasi akan ditampilkan di bawah
 }
 
 ?>
@@ -134,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -144,8 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <h3 class="card-title"style="margin-top:5px;"><i class="far fa-list-alt"></i> Form Pengaturan Password</h3>
             </div>
             <!-- /.card-header -->
-
-            <!-- Tampilkan Notifikasi di sini -->
             <?php if (!empty($notif)): ?>
             <div class="alert alert-<?php echo $alert_type; ?> alert-dismissible fade show m-3" role="alert">
                 <?php echo htmlspecialchars($notif); ?>
