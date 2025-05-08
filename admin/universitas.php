@@ -1,7 +1,6 @@
 <?php
 include('../koneksi/koneksi.php');
 
-// --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
         if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {

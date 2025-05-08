@@ -1,7 +1,6 @@
 <?php
 include('../koneksi/koneksi.php');
 
-// Cek apakah ada data ID yang dikirim
 if (isset($_GET['data'])) {
     $id_master_soft_skill = mysqli_real_escape_string($koneksi, $_GET['data']);
 

@@ -1,15 +1,12 @@
 <?php
-// Tidak perlu session_start()
-include('../koneksi/koneksi.php'); // Sesuaikan path
+include('../koneksi/koneksi.php');
 
 $id_master_topik = null;
-$topik_lama = ''; // Default value
+$topik_lama = '';
 
-// Cek apakah ada data ID yang dikirim dan valid
 if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     $id_master_topik = (int)$_GET['data'];
 
-    // Query ambil data topik lama
     $sql_get = "SELECT `topik` FROM `master_topik` WHERE `id_master_topik` = ?";
     $stmt_get = mysqli_prepare($koneksi, $sql_get);
 
@@ -31,7 +28,7 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
     }
 
 } else {
-    header("Location: topik.php"); // Redirect jika ID tidak ada/valid
+    header("Location: topik.php");
     exit;
 }
 
@@ -97,9 +94,8 @@ if (isset($_GET['data']) && filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
 
         <div class="card-body">
           <div class="form-group row">
-            <label for="topik" class="col-sm-3 col-form-label">Topik</label> <!-- Ganti for dan id jadi lowercase -->
+            <label for="topik" class="col-sm-3 col-form-label">Topik</label>
             <div class="col-sm-7">
-               <!-- Ganti id jadi lowercase dan tambahkan required -->
               <input type="text" class="form-control" id="topik" name="topik" value="<?php echo htmlspecialchars($topik_lama); ?>" required>
             </div>
           </div>

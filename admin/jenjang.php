@@ -1,35 +1,30 @@
 <?php
 include('../koneksi/koneksi.php'); // Sesuaikan path
 
-// --- Logic Hapus ---
 if ((isset($_GET['aksi'])) && (isset($_GET['data']))) {
     if ($_GET['aksi'] == 'hapus') {
-        // Validasi ID adalah integer
+
         if (!filter_var($_GET['data'], FILTER_VALIDATE_INT)) {
              header("Location: jenjang.php?notif=hapusgagal&msg=invalidid");
              exit;
         }
         $id_master_jenjang = (int)$_GET['data'];
 
-        // Hapus dari tabel master
-        // Ingat potensi masalah dengan FK ON DELETE RESTRICT dari riwayat_pendidikan
         $sql_delete = "DELETE FROM `master_jenjang` WHERE `id_master_jenjang` = ?";
         $stmt_delete = mysqli_prepare($koneksi, $sql_delete);
 
         if ($stmt_delete) {
-            mysqli_stmt_bind_param($stmt_delete, 'i', $id_master_jenjang); // 'i' for integer
+            mysqli_stmt_bind_param($stmt_delete, 'i', $id_master_jenjang);
             mysqli_stmt_execute($stmt_delete);
 
             if (mysqli_stmt_affected_rows($stmt_delete) > 0) {
                 header("Location: jenjang.php?notif=hapusberhasil");
             } else {
-                $error_info = mysqli_stmt_error($stmt_delete); // Cek error DB
-                // Log error jika perlu: error_log("Gagal hapus jenjang $id_master_jenjang: $error_info");
+                $error_info = mysqli_stmt_error($stmt_delete);
                 header("Location: jenjang.php?notif=hapusgagal&msg=failed" . (!empty($error_info) ? '_db' : ''));
             }
             mysqli_stmt_close($stmt_delete);
         } else {
-            // Gagal prepare
             header("Location: jenjang.php?notif=hapusgagal&msg=prepare");
         }
         exit;
