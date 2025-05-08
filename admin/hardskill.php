@@ -72,7 +72,7 @@ $start = ($page - 1) * $limit;
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3><i class="fas fa-cogs"></i> Hard Skill</h3> <!-- Ganti ikon -->
+            <h3><i class="fas fa-cogs"></i> Hard Skill</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -97,7 +97,7 @@ $start = ($page - 1) * $limit;
               <div class="col-md-12">
                 <form method="GET" action="hardskill.php">
                     <div class="row">
-                        <div class="col-md-4 mb-2"> <!-- Ganti bottom-10 jadi mb-2 (Bootstrap margin bottom) -->
+                        <div class="col-md-4 mb-2"> 
                           <input type="text" class="form-control" id="katakunci" name="katakunci" placeholder="Cari hard skill..." value="<?php echo htmlspecialchars($search_query); ?>">
                         </div>
                         <div class="col-md-5 mb-2">
@@ -121,10 +121,10 @@ $start = ($page - 1) * $limit;
               </div>
 
               <div class="table-responsive">
-                <table class="table table-bordered table-striped"> <!-- Tambah table-striped -->
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th width="5%" class="text-center">No</th> <!-- text-center -->
+                      <th width="5%" class="text-center">No</th>
                       <th width="80%">Hard Skill</th>
                       <th width="15%"><center>Aksi</center></th>
                     </tr>
