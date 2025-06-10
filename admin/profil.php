@@ -2,13 +2,14 @@
 session_start();
 include('../koneksi/koneksi.php');
 $id_user = $_SESSION['id_user'];
-$sql = "select `nama`, `email`,`foto` from `user`
+$sql = "select `nama`, `email`,`foto`,`deskripsi` from `user`
 where `id_user`='$id_user'";
 $query = mysqli_query($koneksi, $sql);
 while($data = mysqli_fetch_row($query)){
 $nama = $data[0];
 $email = $data[1];
 $foto = $data[2];
+$deskripsi = $data[3];
 }
 ?>
 
@@ -76,6 +77,10 @@ class="img-fluid" width="200px;"></td>
  <tr>
  <td width="20%"><strong>Email<strong></td>
  <td width="80%"><?php echo $email;?></td>
+ </tr>
+ <tr>
+ <td width="20%"><strong>Deskripsi<strong></td>
+ <td width="80%"><?php echo $deskripsi;?></td>
  </tr>
  </tbody>
  </table> 

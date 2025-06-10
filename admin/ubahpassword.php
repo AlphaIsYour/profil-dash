@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($user_data && isset($user_data['password'])) {
               $password_db = $user_data['password'];
               $password_lama_cocok = false;
+              
               if (password_verify($pass_lama_input, $password_db)) {
                   $password_lama_cocok = true;
               }
@@ -44,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               }
 
               if ($password_lama_cocok) {
-
-                  $hashed_pass_baru = password_hash($pass_baru, PASSWORD_DEFAULT);
+                  // Hash new password with MD5
+                  $hashed_pass_baru = md5($pass_baru);
 
                   $sql_update = "UPDATE `user` SET `password` = ? WHERE `id_user` = ?";
                   $stmt_update = mysqli_prepare($koneksi, $sql_update);
